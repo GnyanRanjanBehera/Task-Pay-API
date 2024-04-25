@@ -1,5 +1,4 @@
 package com.task_pay.task_pay;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
