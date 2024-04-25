@@ -1,0 +1,122 @@
+package com.task_pay.task_pay.services.impl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
+import com.task_pay.task_pay.models.dtos.UserDto;
+import com.task_pay.task_pay.models.entities.Token;
+import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.enums.TokenType;
+import com.task_pay.task_pay.repositories.TokenRepository;
+import com.task_pay.task_pay.repositories.UserRepository;
+import com.task_pay.task_pay.security.JwtService;
+import com.task_pay.task_pay.services.AuthService;
+import com.task_pay.task_pay.utils.request.AuthenticationRequest;
+import com.task_pay.task_pay.utils.response.AuthenticationResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+
+
+@Service
+public class AuthServiceImpl implements AuthService {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private ModelMapper mapper;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TokenRepository tokenRepository;
+    @Override
+    public UserDto signUp(UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        User user = mapper.map(userDto, User.class);
+        User saveUser = userRepository.save(user);
+        return mapper.map(saveUser,UserDto.class);
+    }
+
+    @Override
+    public AuthenticationResponse signIn(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getMobileNumber(),
+                        request.getPassword()
+                )
+        );
+        User user = userRepository
+                .findByMobileNumber(request.getMobileNumber())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user,jwtToken);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .userDto(mapper.map(user,UserDto.class))
+                .build();
+    }
+
+    @Override
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException, IOException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String mobileNumber;
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            return;
+        }
+        refreshToken = authHeader.substring(7);
+        mobileNumber = jwtService.extractUsername(refreshToken);
+        if (mobileNumber != null) {
+            var user = this.userRepository.findByMobileNumber(mobileNumber)
+                    .orElseThrow();
+            if (jwtService.isTokenValid(refreshToken, user)) {
+                var accessToken = jwtService.generateToken(user);
+                revokeAllUserTokens(user);
+                saveUserToken(user, accessToken);
+                var authResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+            }
+        }
+    }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getUserId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }
+}
