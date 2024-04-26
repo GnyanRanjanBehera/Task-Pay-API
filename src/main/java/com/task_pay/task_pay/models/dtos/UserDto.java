@@ -17,6 +17,8 @@ public class UserDto {
 
     @NotBlank(message = "name is blank")
     private String name;
+    
+    private String profilePic;
 
     @NotBlank(message = "mobileNumber is blank")
     private String mobileNumber;
