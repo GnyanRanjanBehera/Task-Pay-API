@@ -49,7 +49,8 @@ public class SecurityConfig {
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
-                ).exceptionHandling(ex->ex.authenticationEntryPoint(authenticationEntryPoint))
+                )
+                .exceptionHandling(ex->ex.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(
                         (session) -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
