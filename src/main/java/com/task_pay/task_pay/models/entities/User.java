@@ -4,11 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -27,10 +23,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String mobileNumber;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
@@ -42,12 +38,28 @@ public class User implements UserDetails {
 
     private String profilePic;
 
-//    @Column(nullable = false)
-    private Date createAt;
+    @Column(nullable = false,unique = true)
+    private String invitationCode;
 
-    @OneToMany(mappedBy = "user")
+    private Date optVerifiedAt;
+
+
+    private Date updatedAt;
+
+    @Column(nullable = false)
+    private Date createdAt;
+
+
+    @Column(nullable = false)
+    private boolean isBlock;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
     @ToString.Exclude
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
+    @ToString.Exclude
+    private List<Invite> invites;
 
 
 

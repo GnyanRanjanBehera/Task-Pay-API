@@ -10,18 +10,22 @@ import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.security.JwtService;
 import com.task_pay.task_pay.services.AuthService;
 import com.task_pay.task_pay.utils.request.AuthenticationRequest;
+import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.*;
 
 
 @Service
@@ -42,12 +46,55 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+
     @Override
-    public UserDto signUp(UserDto userDto) {
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        User user = mapper.map(userDto, User.class);
+    public  ApiMessageResponse sendOTP(UserDto userDto) {
+        Optional<User> userByNumber = userRepository.findByMobileNumber(userDto.getMobileNumber());
+        if(userByNumber.isPresent()) {
+            User user = userByNumber.get();
+            if (Objects.equals(user.getMobileNumber(), userDto.getMobileNumber())) {
+                return ApiMessageResponse.builder().
+                        message("Mobile number already exist").
+                        success(true).status(HttpStatus.NOT_FOUND).build();
+            } else if (Objects.equals(user.getEmail(), userDto.getEmail())) {
+                return ApiMessageResponse.builder().
+                        message("Email id already exist").
+                        success(true).status(HttpStatus.NOT_FOUND).build();
+            }
+
+        }
+        return ApiMessageResponse.builder().
+                message("OTP send successfully").
+                success(true).status(HttpStatus.NOT_FOUND).build();
+
+    }
+
+    @Override
+    public AuthenticationResponse verifyOTP(UserDto userDto,String OTP) {
+        String invitationCode = generateInvitationCode();
+     User user=User.builder()
+                .userType("Buyer")
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .mobileNumber(userDto.getMobileNumber())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .invitationCode(invitationCode)
+                .about(userDto.getAbout())
+                .expertIn(userDto.getExpertIn())
+             .optVerifiedAt(new Date())
+                .createdAt(new Date())
+                .isBlock(false)
+                .build();
         User saveUser = userRepository.save(user);
-        return mapper.map(saveUser,UserDto.class);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(saveUser,jwtToken);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .userDto(mapper.map(user,UserDto.class))
+                .build();
     }
 
     @Override
@@ -60,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
         );
         User user = userRepository
                 .findByMobileNumber(request.getMobileNumber())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Mobile Number and password doesn't match"));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -118,5 +165,17 @@ public class AuthServiceImpl implements AuthService {
             token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
+    }
+
+
+    public String generateInvitationCode() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        int codeLength = 6;
+        StringBuilder codeBuilder = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < codeLength; i++) {
+            codeBuilder.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return codeBuilder.toString();
     }
 }
