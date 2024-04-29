@@ -1,6 +1,6 @@
 package com.task_pay.task_pay.models.dtos;
-import com.task_pay.task_pay.models.entities.User;
 import lombok.*;
+import java.util.Date;
 
 
 @Getter
@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class InviteDto {
     private Integer inviteId;
-
-    public User user;
-
+    private Date invitedAt;
+    private Integer inviteUserId;
+    private UserDto user;
 }

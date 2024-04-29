@@ -54,14 +54,13 @@ public class User implements UserDetails {
     private boolean isBlock;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
-    @ToString.Exclude
-    private List<Token> tokens;
+    private List<Token> tokens=new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
-    @ToString.Exclude
-    private List<Invite> invites;
+    private List<Invite> invites=new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Task> tasks=new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

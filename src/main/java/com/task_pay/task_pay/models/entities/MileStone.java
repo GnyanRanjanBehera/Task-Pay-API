@@ -3,22 +3,22 @@ package com.task_pay.task_pay.models.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class TaskFile {
-
+public class MileStone {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer fileId;
+    private Integer mileStoneId;
+    private String mileStoneName;
+    private String mileStonePrice;
 
-    private String url;
-
-//    @ManyToOne
-//    @JoinColumn(name = "taskId")
-//    private Task task;
+    @ManyToOne
+    @JoinColumn(name = "taskId")
+    private Task task;
 
 }

@@ -15,22 +15,21 @@ import java.util.Objects;
 public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    public Integer tokenId;
+    private Integer tokenId;
 
     @Column(unique = true)
-    public String token;
+    private String token;
 
     @Enumerated(EnumType.STRING)
-    public TokenType tokenType = TokenType.BEARER;
+    private TokenType tokenType = TokenType.BEARER;
 
-    public boolean revoked;
+    private boolean revoked;
 
-    public boolean expired;
+    private boolean expired;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "userId")
-    @ToString.Exclude
-    public User user;
+    private User user;
 
     @Override
     public boolean equals(Object o) {

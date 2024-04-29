@@ -35,13 +35,13 @@ public class AuthController {
 
     @PostMapping("/verifyOTP/{OTP}")
     public ResponseEntity<AuthenticationResponse> verifyOTP(
-            @RequestBody UserDto userDto,@PathVariable("OTP") String OTP
+            @Valid @RequestBody UserDto userDto,@PathVariable("OTP") String OTP
     ) {
         return new ResponseEntity<>(authService.verifyOTP(userDto,OTP), HttpStatus.OK);
     }
     @PostMapping("/signIn")
     public ResponseEntity<AuthenticationResponse> signIn(
-            @RequestBody AuthenticationRequest request
+            @Valid  @RequestBody AuthenticationRequest request
     ) {
         return new ResponseEntity<>(authService.signIn(request), HttpStatus.OK);
     }
