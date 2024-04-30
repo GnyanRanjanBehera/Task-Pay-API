@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.services;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.utils.request.AuthenticationRequest;
+import com.task_pay.task_pay.utils.request.SendOtpRequest;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public interface AuthService {
 
-    ApiMessageResponse sendOTP(UserDto userDto);
+    ApiMessageResponse sendOTP(SendOtpRequest request);
     AuthenticationResponse verifyOTP(UserDto userDto,String OTP);
 
     AuthenticationResponse signIn(AuthenticationRequest request);

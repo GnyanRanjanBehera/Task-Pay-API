@@ -3,6 +3,7 @@ import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.services.AuthService;
 
 import com.task_pay.task_pay.utils.request.AuthenticationRequest;
+import com.task_pay.task_pay.utils.request.SendOtpRequest;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,8 +25,8 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/sendOTP")
-    public  ResponseEntity<ApiMessageResponse> sendOTP(@Valid @RequestBody UserDto userDto){
-        ApiMessageResponse response = authService.sendOTP(userDto);
+    public  ResponseEntity<ApiMessageResponse> sendOTP(@Valid @RequestBody SendOtpRequest request){
+        ApiMessageResponse response = authService.sendOTP(request);
         if (response.getStatus()==HttpStatus.NOT_FOUND){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
@@ -35,13 +36,13 @@ public class AuthController {
 
     @PostMapping("/verifyOTP/{OTP}")
     public ResponseEntity<AuthenticationResponse> verifyOTP(
-            @RequestBody UserDto userDto,@PathVariable("OTP") String OTP
+            @Valid @RequestBody UserDto userDto,@PathVariable("OTP") String OTP
     ) {
         return new ResponseEntity<>(authService.verifyOTP(userDto,OTP), HttpStatus.OK);
     }
     @PostMapping("/signIn")
     public ResponseEntity<AuthenticationResponse> signIn(
-            @RequestBody AuthenticationRequest request
+            @Valid  @RequestBody AuthenticationRequest request
     ) {
         return new ResponseEntity<>(authService.signIn(request), HttpStatus.OK);
     }

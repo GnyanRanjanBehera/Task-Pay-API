@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column(nullable = false,unique = true)
     private String invitationCode;
 
-    private Date optVerifiedAt;
+    private Date otpVerifiedAt;
 
 
     private Date updatedAt;
@@ -49,19 +49,23 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Date createdAt;
 
-
     @Column(nullable = false)
     private boolean isBlock;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
-    @ToString.Exclude
-    private List<Token> tokens;
+    private List<Token> tokens=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
-    @ToString.Exclude
-    private List<Invite> invites;
+    @OneToMany(mappedBy = "inviteUser",cascade = CascadeType.ALL,orphanRemoval=true)
+    private List<Invite> inviteUsers=new ArrayList<>();
 
+    @OneToMany(mappedBy = "invitedUser",cascade = CascadeType.ALL,orphanRemoval=true)
+    private List<Invite> invitedUsers=new ArrayList<>();
 
+    @OneToMany(mappedBy = "senderUser",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Task> sendingTasks=new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiverUser",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Task> receivingTasks=new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

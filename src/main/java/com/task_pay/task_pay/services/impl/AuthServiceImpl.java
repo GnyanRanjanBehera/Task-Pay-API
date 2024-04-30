@@ -10,6 +10,7 @@ import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.security.JwtService;
 import com.task_pay.task_pay.services.AuthService;
 import com.task_pay.task_pay.utils.request.AuthenticationRequest;
+import com.task_pay.task_pay.utils.request.SendOtpRequest;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,24 +50,40 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public  ApiMessageResponse sendOTP(UserDto userDto) {
-        Optional<User> userByNumber = userRepository.findByMobileNumber(userDto.getMobileNumber());
-        if(userByNumber.isPresent()) {
+    public  ApiMessageResponse sendOTP(SendOtpRequest request) {
+        Optional<User> userByNumber = userRepository.findByMobileNumber(request.getMobileNumber());
+        Optional<User> userByEmail = userRepository.findByEmail(request.getEmail());
+        if(userByNumber.isPresent() && userByEmail.isEmpty()) {
             User user = userByNumber.get();
-            if (Objects.equals(user.getMobileNumber(), userDto.getMobileNumber())) {
+            if (Objects.equals(user.getMobileNumber(), request.getMobileNumber())) {
                 return ApiMessageResponse.builder().
                         message("Mobile number already exist").
                         success(true).status(HttpStatus.NOT_FOUND).build();
-            } else if (Objects.equals(user.getEmail(), userDto.getEmail())) {
+            }
+        }
+        if(userByEmail.isPresent() && userByNumber.isEmpty()) {
+            User user = userByEmail.get();
+            if (Objects.equals(user.getEmail(), request.getEmail())) {
                 return ApiMessageResponse.builder().
                         message("Email id already exist").
                         success(true).status(HttpStatus.NOT_FOUND).build();
             }
-
         }
+
+        if(userByEmail.isPresent() && userByNumber.isPresent()){
+            User userEmail = userByEmail.get();
+            User userMobile = userByNumber.get();
+            if (Objects.equals(userEmail.getEmail(), request.getEmail())
+                    && Objects.equals(userMobile.getMobileNumber(), request.getMobileNumber())) {
+                return ApiMessageResponse.builder().
+                        message("Mobile Number & Email id already exist").
+                        success(true).status(HttpStatus.NOT_FOUND).build();
+            }
+        }
+
         return ApiMessageResponse.builder().
                 message("OTP send successfully").
-                success(true).status(HttpStatus.NOT_FOUND).build();
+                success(true).status(HttpStatus.OK).build();
 
     }
 
@@ -76,13 +93,14 @@ public class AuthServiceImpl implements AuthService {
      User user=User.builder()
                 .userType("Buyer")
                 .name(userDto.getName())
+                .profilePic(userDto.getProfilePic())
                 .email(userDto.getEmail())
                 .mobileNumber(userDto.getMobileNumber())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .invitationCode(invitationCode)
                 .about(userDto.getAbout())
                 .expertIn(userDto.getExpertIn())
-             .optVerifiedAt(new Date())
+                .otpVerifiedAt(new Date())
                 .createdAt(new Date())
                 .isBlock(false)
                 .build();

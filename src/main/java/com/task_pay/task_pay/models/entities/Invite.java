@@ -2,6 +2,8 @@ package com.task_pay.task_pay.models.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,9 +15,15 @@ public class Invite {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer inviteId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    @ToString.Exclude
-    public User user;
+    @Column(nullable = false)
+    private Date invitedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "inviteUserId")
+    private User inviteUser;
+
+    @ManyToOne
+    @JoinColumn(name = "invitedUserId")
+    public User invitedUser;
 
 }
