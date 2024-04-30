@@ -16,9 +16,6 @@ public class Task {
     private Integer taskId;
 
     @Column(nullable = false)
-    private Integer assignUserId;
-
-    @Column(nullable = false)
     private String taskName;
 
     @Column(nullable = false)
@@ -27,15 +24,27 @@ public class Task {
     @Column(nullable = false)
     private String taskAbout;
 
-//
-//    @OneToMany(mappedBy = "task",cascade = CascadeType.ALL,orphanRemoval=true)
-//    private List<TaskFile> taskFiles=new ArrayList<>();
+    @Column(nullable = false)
+    private String taskStatus;
+
+    @Column(nullable = false)
+    private String senderUserType;
+
+    @Column(nullable = false)
+    private String receiverUserType;
+
+    @ManyToOne
+    @JoinColumn(name = "senderUserId")
+    private User senderUser;
+
+    @ManyToOne
+    @JoinColumn(name = "receiverUserId")
+    private User receiverUser;
+
+    @OneToMany(mappedBy = "task",cascade = CascadeType.ALL,orphanRemoval=true)
+    private List<TaskFile> taskFiles=new ArrayList<>();
 
     @OneToMany(mappedBy = "task",cascade = CascadeType.ALL,orphanRemoval=true)
     private List<MileStone> mileStones=new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
 
 }

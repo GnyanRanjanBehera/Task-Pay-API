@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.services;
 
 
+import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,6 @@ public interface TaskService {
 
     TaskDto assignTask( Integer userId, Integer assignUserId,
                        String taskName, Integer taskPrice,
-                       String taskAbout, List<Map<String, Object>> milestones);
+                       String taskAbout, List<MileStoneDto> mileStoneDtos);
 
 }

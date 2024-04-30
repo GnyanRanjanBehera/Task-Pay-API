@@ -34,71 +34,71 @@ public class InviteServiceImpl implements InviteService {
 
     @Autowired
     private ModelMapper mapper;
-    @Override
-    public InviteDto inviteUser(InviteUserRequest inviteUserRequest) {
-        String mobileNumber = inviteUserRequest.getMobileNumber();
-        String invitationCode=inviteUserRequest.getInvitationCode();
-        Integer userId = inviteUserRequest.getUserId();
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with this userId"));
-        if(mobileNumber==null && invitationCode!=null && user!=null){
-            User inviteUser = userRepository
-                    .findByInvitationCode(invitationCode).orElseThrow(() -> new ResourceNotFoundException("User not found with this invitation code !"));
-            Optional<Invite> invitedUser = inviteRepository.findById(inviteUser.getUserId());
-            if(invitedUser.isEmpty()){
-                Invite invite=new Invite();
-                invite.setInvitedAt(new Date());
-                invite.setInviteUserId(userId);
-                invite.setUser(inviteUser);
-                inviteRepository.save(invite);
-                return mapper.map(invite,InviteDto.class);
-            }else{
-                return mapper.map(invitedUser.get(),InviteDto.class);
-            }
-        } else if(invitationCode==null && mobileNumber!=null&& user!=null){
-            User inviteUser = userRepository
-                    .findByMobileNumber(mobileNumber).orElseThrow(() -> new ResourceNotFoundException("User not found with this mobile number !"));
-            Optional<Invite> invitedUser = inviteRepository.findById(inviteUser.getUserId());
-            if(invitedUser.isEmpty()){
-                Invite invite=new Invite();
-                invite.setInvitedAt(new Date());
-                invite.setInviteUserId(userId);
-                invite.setUser(inviteUser);
-                inviteRepository.save(invite);
-                return mapper.map(invite,InviteDto.class);
-            }else{
-
-                return mapper.map(invitedUser.get(),InviteDto.class);
-            }
-
-        }else{
-            User inviteUser = userRepository.findByMobileNumberAndInvitationCode(mobileNumber,invitationCode)
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found with this mobile number & invitation code !"));
-            Optional<Invite> invitedUser = inviteRepository.findById(inviteUser.getUserId());
-            if(invitedUser.isEmpty()){
-                Invite invite=new Invite();
-                invite.setInvitedAt(new Date());
-                invite.setInviteUserId(userId);
-                invite.setUser(inviteUser);
-                inviteRepository.save(invite);
-                return mapper.map(invite,InviteDto.class);
-            }else{
-
-                return mapper.map(invitedUser.get(),InviteDto.class);
-            }
-
-        }
-    }
-
-    @Override
-    public PageableResponse<InviteDto> fetchInvitedUsers(Integer userId,int pageNumber, int pageSize, String sortBy, String sortDir) {
-        Sort sort = (sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
-        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
-        Page<Objects[]> invitedUsersByUserId = inviteRepository.findInvitedUsersByUserId(userId, pageable);
-        return Helper.getPageableResponse(invitedUsersByUserId, InviteDto.class);
-    }
-
-    @Override
-    public void deleteInvitedUser(String userId, String inviteId) {
-
-    }
+//    @Override
+//    public InviteDto inviteUser(InviteUserRequest inviteUserRequest) {
+//        String mobileNumber = inviteUserRequest.getMobileNumber();
+//        String invitationCode=inviteUserRequest.getInvitationCode();
+//        Integer userId = inviteUserRequest.getUserId();
+//        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with this userId"));
+//        if(mobileNumber==null && invitationCode!=null && user!=null){
+//            User inviteUser = userRepository
+//                    .findByInvitationCode(invitationCode).orElseThrow(() -> new ResourceNotFoundException("User not found with this invitation code !"));
+//            Optional<Invite> invitedUser = inviteRepository.findById(inviteUser.getUserId());
+//            if(invitedUser.isEmpty()){
+//                Invite invite=new Invite();
+//                invite.setInvitedAt(new Date());
+////                invite.setInviteUserId(userId);
+////                invite.setUser(inviteUser);
+//                inviteRepository.save(invite);
+//                return mapper.map(invite,InviteDto.class);
+//            }else{
+//                return mapper.map(invitedUser.get(),InviteDto.class);
+//            }
+//        } else if(invitationCode==null && mobileNumber!=null&& user!=null){
+//            User inviteUser = userRepository
+//                    .findByMobileNumber(mobileNumber).orElseThrow(() -> new ResourceNotFoundException("User not found with this mobile number !"));
+//            Optional<Invite> invitedUser = inviteRepository.findById(inviteUser.getUserId());
+//            if(invitedUser.isEmpty()){
+//                Invite invite=new Invite();
+//                invite.setInvitedAt(new Date());
+////                invite.setInviteUserId(userId);
+////                invite.setUser(inviteUser);
+//                inviteRepository.save(invite);
+//                return mapper.map(invite,InviteDto.class);
+//            }else{
+//
+//                return mapper.map(invitedUser.get(),InviteDto.class);
+//            }
+//
+//        }else{
+//            User inviteUser = userRepository.findByMobileNumberAndInvitationCode(mobileNumber,invitationCode)
+//                    .orElseThrow(() -> new ResourceNotFoundException("User not found with this mobile number & invitation code !"));
+//            Optional<Invite> invitedUser = inviteRepository.findById(inviteUser.getUserId());
+//            if(invitedUser.isEmpty()){
+//                Invite invite=new Invite();
+//                invite.setInvitedAt(new Date());
+////                invite.setInviteUserId(userId);
+////                invite.setUser(inviteUser);
+//                inviteRepository.save(invite);
+//                return mapper.map(invite,InviteDto.class);
+//            }else{
+//
+//                return mapper.map(invitedUser.get(),InviteDto.class);
+//            }
+//
+//        }
+//    }
+//
+//    @Override
+//    public PageableResponse<InviteDto> fetchInvitedUsers(Integer userId,int pageNumber, int pageSize, String sortBy, String sortDir) {
+//        Sort sort = (sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
+//        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+//        Page<Objects[]> invitedUsersByUserId = inviteRepository.findInvitedUsersByUserId(userId, pageable);
+//        return Helper.getPageableResponse(invitedUsersByUserId, InviteDto.class);
+//    }
+//
+//    @Override
+//    public void deleteInvitedUser(String userId, String inviteId) {
+//
+//    }
 }

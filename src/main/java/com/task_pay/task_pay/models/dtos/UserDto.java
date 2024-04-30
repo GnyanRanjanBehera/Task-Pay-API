@@ -1,5 +1,5 @@
 package com.task_pay.task_pay.models.dtos;
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.util.Date;
@@ -26,6 +26,7 @@ public class UserDto {
     @NotBlank(message = "email is blank")
     private String email;
 
+    @JsonIgnore
     @NotBlank(message = "password is blank")
     private String password;
 
@@ -35,7 +36,7 @@ public class UserDto {
 
     private String invitationCode;
 
-    private Date optVerifiedAt;
+    private Date otpVerifiedAt;
 
     private Date updatedAt;
 

@@ -1,6 +1,4 @@
 package com.task_pay.task_pay.models.dtos;
-
-
 import lombok.*;
 
 @Getter
@@ -8,8 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MileStoneDto {
-    private Integer id;
-    private String mileStoneName;
-    private Integer mileStonePrice;
+public class TaskFileDto {
+    private Integer fileId;
+    private String url;
 }

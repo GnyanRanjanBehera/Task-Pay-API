@@ -14,6 +14,6 @@ import java.util.Optional;
 
 public interface InviteRepository extends JpaRepository<Invite, Integer> {
 
-    @Query("SELECT i.user FROM Invite i WHERE i.inviteUserId = :userId")
-    Page<Objects[]> findInvitedUsersByUserId(Integer userId, Pageable pageable);
+//    @Query("SELECT i.user FROM Invite i WHERE i.inviteUserId = :userId")
+//    Page<Objects[]> findInvitedUsersByUserId(Integer userId, Pageable pageable);
 }

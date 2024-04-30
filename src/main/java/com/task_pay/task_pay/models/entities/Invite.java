@@ -18,11 +18,12 @@ public class Invite {
     @Column(nullable = false)
     private Date invitedAt;
 
-    @Column(nullable = false)
-    private Integer inviteUserId;
+    @ManyToOne
+    @JoinColumn(name = "inviteUserId")
+    private User inviteUser;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
-    public User user;
+    @JoinColumn(name = "invitedUserId")
+    public User invitedUser;
 
 }

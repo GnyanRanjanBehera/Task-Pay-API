@@ -1,4 +1,5 @@
 package com.task_pay.task_pay.models.dtos;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.task_pay.task_pay.models.entities.TaskFile;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,17 +18,25 @@ public class TaskDto {
     @NotBlank(message = "required taskName !")
     private String taskName;
 
-    @NotNull(message = "required assignUserId !")
-    private Integer assignUserId;
-
-
     @NotNull(message = "required taskPrice !")
     private Integer taskPrice;
 
     @NotBlank(message = "required taskAbout !")
     private String taskAbout;
 
-//    private List<String> taskFiles;
+    @JsonIgnore
+    private String senderUserType;
+
+    @JsonIgnore
+    private String receiverUserType;
+
+    private String taskStatus;
+
+    private UserDto senderUser;
+
+    private UserDto receiverUser;
+
+    private List<TaskFileDto> taskFiles;
 
     private List<MileStoneDto> mileStones;
 }

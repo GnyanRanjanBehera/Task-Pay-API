@@ -17,8 +17,8 @@ public class TaskFile {
 
     private String url;
 
-//    @ManyToOne
-//    @JoinColumn(name = "taskId")
-//    private Task task;
+    @ManyToOne
+    @JoinColumn(name = "taskId")
+    private Task task;
 
 }
