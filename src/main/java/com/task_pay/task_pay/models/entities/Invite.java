@@ -19,11 +19,11 @@ public class Invite {
     private Date invitedAt;
 
     @ManyToOne
-    @JoinColumn(name = "inviteUserId")
+    @JoinColumn(name = "inviteUserId",referencedColumnName = "userId")
     private User inviteUser;
 
     @ManyToOne
-    @JoinColumn(name = "invitedUserId")
+    @JoinColumn(name = "invitedUserId",referencedColumnName = "userId")
     public User invitedUser;
 
 }

@@ -35,4 +35,29 @@ public class TaskController {
         TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,mileStoneDtos);
         return  new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
+
+    @GetMapping("/fetchBuyerTasks/{userId}")
+    public ResponseEntity<PageableResponse<TaskDto>> fetchBuyerTasks(
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
+            @RequestParam(value = "sortBy",defaultValue = "taskStatus",required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
+            @PathVariable("userId") Integer userId
+    ){
+        PageableResponse<TaskDto> taskDtoPageableResponse = taskService.fetchBuyerTasks(userId, pageNumber, pageSize, sortBy, sortDir);
+        return  new ResponseEntity<>(taskDtoPageableResponse,HttpStatus.OK);
+    }
+
+
+    @GetMapping("/fetchSellerTasks/{userId}")
+    public ResponseEntity<PageableResponse<TaskDto>> fetchSellerTasks(
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
+            @RequestParam(value = "sortBy",defaultValue = "taskStatus",required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
+            @PathVariable("userId") Integer userId
+    ){
+        PageableResponse<TaskDto> taskDtoPageableResponse = taskService.fetchSellerTasks(userId, pageNumber, pageSize, sortBy, sortDir);
+        return  new ResponseEntity<>(taskDtoPageableResponse,HttpStatus.OK);
+    }
 }

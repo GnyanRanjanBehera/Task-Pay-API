@@ -26,7 +26,6 @@ public class UserDto {
     @NotBlank(message = "email is blank")
     private String email;
 
-    @JsonIgnore
     @NotBlank(message = "password is blank")
     private String password;
 

@@ -11,6 +11,6 @@ import java.util.Date;
 public class InviteDto {
     private Integer inviteId;
     private Date invitedAt;
-    private Integer inviteUserId;
-    private UserDto user;
+    private UserDto inviteUser;
+    private UserDto invitedUser;
 }
