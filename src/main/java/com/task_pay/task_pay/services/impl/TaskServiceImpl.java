@@ -1,5 +1,6 @@
 package com.task_pay.task_pay.services.impl;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
+import com.task_pay.task_pay.models.dtos.InviteDto;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
 import com.task_pay.task_pay.models.dtos.UserDto;
@@ -12,8 +13,14 @@ import com.task_pay.task_pay.repositories.TaskFileRepository;
 import com.task_pay.task_pay.repositories.TaskRepository;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.services.TaskService;
+import com.task_pay.task_pay.utils.Helper;
+import com.task_pay.task_pay.utils.response.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,5 +82,21 @@ public class TaskServiceImpl implements TaskService {
         saveTask.setMileStones(milestones);
         taskRepository.save(saveTask);
         return mapper.map(saveTask,TaskDto.class);
+    }
+
+    @Override
+    public PageableResponse<TaskDto> fetchBuyerTasks(Integer userId,int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = (sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Objects[]> buyerTasks = taskRepository.findBuyerTasks(userId, pageable);
+        return Helper.getPageableResponse(buyerTasks, TaskDto.class);
+    }
+
+    @Override
+    public PageableResponse<TaskDto> fetchSellerTasks(Integer userId,int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = (sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Objects[]> buyerTasks = taskRepository.findSellerTasks(userId, pageable);
+        return Helper.getPageableResponse(buyerTasks, TaskDto.class);
     }
 }

@@ -5,6 +5,7 @@ import com.task_pay.task_pay.models.dtos.InviteDto;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.services.InviteService;
 import com.task_pay.task_pay.utils.request.InviteUserRequest;
+import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import com.task_pay.task_pay.utils.response.PageableResponse;
 import jakarta.validation.Valid;
@@ -22,22 +23,33 @@ public class InviteController {
     @Autowired
     private InviteService inviteService;
 
-//    @PostMapping("/inviteUser")
-//    public ResponseEntity<InviteDto> inviteUser(
-//           @Valid @RequestBody InviteUserRequest inviteUserRequest
-//            ) {
-//        return new ResponseEntity<>(inviteService.inviteUser(inviteUserRequest), HttpStatus.OK);
-//    }
+    @PostMapping("/inviteUser")
+    public ResponseEntity<InviteDto> inviteUser(
+           @Valid @RequestBody InviteUserRequest inviteUserRequest
+            ) {
+        return new ResponseEntity<>(inviteService.inviteUser(inviteUserRequest), HttpStatus.OK);
+    }
 
-//    @GetMapping("/fetchInvitedUsers/{userId}")
-//    public ResponseEntity<PageableResponse<InviteDto>> fetchInvitedUsers(
-//            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
-//            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
-//            @RequestParam(value = "sortBy",defaultValue = "invitedAt",required = false) String sortBy,
-//            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
-//            @PathVariable("userId") Integer userId
-//    ){
-//        PageableResponse<InviteDto> inviteDtoPageableResponse = inviteService.fetchInvitedUsers(userId, pageNumber, pageSize, sortBy, sortDir);
-//        return  new ResponseEntity<>(inviteDtoPageableResponse,HttpStatus.OK);
-//    }
+    @GetMapping("/fetchInvitedUsers/{userId}")
+    public ResponseEntity<PageableResponse<InviteDto>> fetchInvitedUsers(
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
+            @RequestParam(value = "sortBy",defaultValue = "invitedAt",required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
+            @PathVariable("userId") Integer userId
+    ){
+        PageableResponse<InviteDto> inviteDtoPageableResponse = inviteService.fetchInvitedUsers(userId, pageNumber, pageSize, sortBy, sortDir);
+        return  new ResponseEntity<>(inviteDtoPageableResponse,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/removeInvitedUser")
+    public  ResponseEntity<ApiMessageResponse> removeInvitedUser(
+           @Valid @RequestParam(value = "userId") Integer userId,
+           @Valid @RequestParam(value = "inviteId") Integer inviteId
+    ){
+        inviteService.removeInvitedUser(userId,inviteId);
+        ApiMessageResponse rmUserResponse = ApiMessageResponse.builder()
+                .message("Remove invited user successfully !").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(rmUserResponse,HttpStatus.OK);
+    }
 }
