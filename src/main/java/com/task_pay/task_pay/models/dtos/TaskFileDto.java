@@ -1,5 +1,6 @@
 package com.task_pay.task_pay.models.dtos;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -8,5 +9,5 @@ import lombok.*;
 @Builder
 public class TaskFileDto {
     private Integer fileId;
-    private String url;
+    private MultipartFile url;
 }

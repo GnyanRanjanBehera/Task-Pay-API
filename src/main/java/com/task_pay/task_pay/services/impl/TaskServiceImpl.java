@@ -1,8 +1,8 @@
 package com.task_pay.task_pay.services.impl;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
-import com.task_pay.task_pay.models.dtos.InviteDto;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
+import com.task_pay.task_pay.models.dtos.TaskFileDto;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.MileStone;
 import com.task_pay.task_pay.models.entities.Task;
@@ -24,10 +24,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
+import java.util.*;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -50,7 +48,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto assignTask(Integer userId , Integer assignUserId,
                               String taskName, Integer taskPrice,
-                              String taskAbout,
+                              String taskAbout,List<MultipartFile> images,
                               List<MileStoneDto> mileStoneDtos) {
         User senderUser = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
@@ -69,16 +67,28 @@ public class TaskServiceImpl implements TaskService {
                 .taskStatus("Created")
                 .senderUserType(senderUser.getUserType())
                 .receiverUserType(saveReceiverUser.getUserType())
+                .createAt(new Date())
                 .senderUser(mapper.map(senderUser, UserDto.class))
                 .receiverUser(mapper.map(saveReceiverUser, UserDto.class))
                 .build();
         Task saveTask = taskRepository.save(mapper.map(taskDto,Task.class));
+
+        List<TaskFile> taskFiles = new ArrayList<>();
+        for (MultipartFile  file:images){
+            TaskFile taskFile = new TaskFile();
+            taskFile.setTask(saveTask);
+            taskFile.setUrl(file.toString());
+            taskFiles.add(taskFile);
+
+        }
+
         List<MileStone> milestones = new ArrayList<>();
         for (MileStoneDto milestoneDto : mileStoneDtos) {
             MileStone milestone = mapper.map(milestoneDto, MileStone.class);
             milestone.setTask(saveTask);
             milestones.add(milestone);
         }
+        saveTask.setTaskFiles(taskFiles);
         saveTask.setMileStones(milestones);
         taskRepository.save(saveTask);
         return mapper.map(saveTask,TaskDto.class);
@@ -98,5 +108,16 @@ public class TaskServiceImpl implements TaskService {
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<Objects[]> buyerTasks = taskRepository.findSellerTasks(userId, pageable);
         return Helper.getPageableResponse(buyerTasks, TaskDto.class);
+    }
+
+    @Override
+    public TaskDto acceptTask(Integer userId,Integer taskId) {
+       userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId !"));
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with this taskId !"));
+        task.setTaskStatus("Accepted");
+        Task saveTask = taskRepository.save(task);
+        return mapper.map(saveTask, TaskDto.class);
     }
 }

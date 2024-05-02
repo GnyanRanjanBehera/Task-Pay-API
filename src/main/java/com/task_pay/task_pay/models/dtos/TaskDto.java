@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -31,6 +33,8 @@ public class TaskDto {
     private String receiverUserType;
 
     private String taskStatus;
+
+    private Date createAt;
 
     private UserDto senderUser;
 

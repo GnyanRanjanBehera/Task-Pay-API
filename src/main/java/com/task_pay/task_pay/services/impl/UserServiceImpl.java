@@ -6,6 +6,8 @@ import com.task_pay.task_pay.models.entities.User;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.services.UserService;
 import com.task_pay.task_pay.utils.Helper;
+import com.task_pay.task_pay.utils.response.ApiMessageResponse;
+import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import com.task_pay.task_pay.utils.response.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -24,10 +28,48 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private ModelMapper mapper;
     @Override
-    public UserDto updateUser(UserDto userDto) {
+    public AuthenticationResponse updateUser(UserDto userDto) {
         return null;
+    }
+
+    @Override
+    public AuthenticationResponse updateUserType(Integer userId, String userType) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId !"));
+        user.setUserType(userType);
+        User saveUser = userRepository.save(user);
+        return AuthenticationResponse.builder()
+                .userDto(mapper.map(saveUser,UserDto.class))
+                .build();
+    }
+
+    @Override
+    public AuthenticationResponse updateMobileNumber(Integer userId, String mobileNumber) {
+        return null;
+    }
+
+    @Override
+    public ApiMessageResponse updatePassword(Integer userId, String currPassword, String newPassword) {
+        User user = userRepository.findById(userId).
+                orElseThrow(() -> new ResourceNotFoundException("User not found with this userId !"));
+        boolean isMatchPass = passwordEncoder.matches(currPassword, user.getPassword());
+        if(isMatchPass){
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            return ApiMessageResponse.builder()
+                    .message("Password change successfully !")
+                    .status(HttpStatus.OK).success(true).build();
+        }else{
+            return ApiMessageResponse.builder()
+                    .message("Your current password is wrong !")
+                    .status(HttpStatus.NOT_FOUND).success(false).build();
+        }
+
     }
 
     @Override
@@ -51,11 +93,6 @@ public class UserServiceImpl implements UserService {
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<User> users = userRepository.findAll(pageable);
         return Helper.getPageableResponse(users, UserDto.class);
-    }
-
-    @Override
-    public UserDto blockUser(Integer userId) {
-        return null;
     }
 
     @Override
