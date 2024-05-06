@@ -23,10 +23,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String mobileNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -41,6 +41,7 @@ public class User implements UserDetails {
     @Column(nullable = false,unique = true)
     private String invitationCode;
 
+    @Column(nullable = false)
     private Date otpVerifiedAt;
 
 

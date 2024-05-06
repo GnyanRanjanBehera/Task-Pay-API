@@ -2,6 +2,7 @@ package com.task_pay.task_pay.models.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -32,6 +33,9 @@ public class Task {
 
     @Column(nullable = false)
     private String receiverUserType;
+
+    @Column(nullable = false)
+    private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "senderUserId")

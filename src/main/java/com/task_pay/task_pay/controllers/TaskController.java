@@ -2,10 +2,13 @@ package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.models.dtos.InviteDto;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
+import com.task_pay.task_pay.models.dtos.TaskFileDto;
 import com.task_pay.task_pay.services.TaskService;
 import com.task_pay.task_pay.utils.response.PageableResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,16 +26,18 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
-    @PostMapping("/assignTask")
+    @PostMapping(value = "/assignTask",consumes = {MediaType.ALL_VALUE})
     public ResponseEntity<TaskDto> assignTask(
             @RequestParam(value = "senderUserId") Integer senderUserId,
             @RequestParam(value = "receiverUserId") Integer receiverUserId,
             @RequestParam(value = "taskName") String taskName,
             @RequestParam(value = "taskPrice") Integer taskPrice,
             @RequestParam(value = "taskAbout") String taskAbout,
+            @RequestParam(value ="taskFiles",required = false)List<MultipartFile> taskFiles,
             @RequestBody  List<MileStoneDto> mileStoneDtos
+
             ){
-        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,mileStoneDtos);
+        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,taskFiles,mileStoneDtos);
         return  new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 
@@ -59,5 +64,15 @@ public class TaskController {
     ){
         PageableResponse<TaskDto> taskDtoPageableResponse = taskService.fetchSellerTasks(userId, pageNumber, pageSize, sortBy, sortDir);
         return  new ResponseEntity<>(taskDtoPageableResponse,HttpStatus.OK);
+    }
+
+    @PostMapping("/acceptTask")
+    public ResponseEntity<TaskDto> acceptTask(
+          @RequestParam(value = "userId") Integer userId,
+          @RequestParam(value = "taskId") Integer taskId
+    ){
+        TaskDto taskDto = taskService.acceptTask(userId, taskId);
+        return new ResponseEntity<>(taskDto,HttpStatus.OK);
+
     }
 }

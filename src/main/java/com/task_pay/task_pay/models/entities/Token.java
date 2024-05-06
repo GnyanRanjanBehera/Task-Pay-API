@@ -17,14 +17,16 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer tokenId;
 
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
     private String token;
 
     @Enumerated(EnumType.STRING)
     private TokenType tokenType = TokenType.BEARER;
 
+    @Column(nullable = false)
     private boolean revoked;
 
+    @Column(nullable = false)
     private boolean expired;
 
     @ManyToOne

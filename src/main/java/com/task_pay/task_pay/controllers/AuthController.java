@@ -1,7 +1,11 @@
 package com.task_pay.task_pay.controllers;
+import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.UserDto;
+import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.services.AuthService;
 
+import com.task_pay.task_pay.services.UserService;
 import com.task_pay.task_pay.utils.request.AuthenticationRequest;
 import com.task_pay.task_pay.utils.request.SendOtpRequest;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
@@ -24,6 +28,12 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping("/sendOTP")
     public  ResponseEntity<ApiMessageResponse> sendOTP(@Valid @RequestBody SendOtpRequest request){
         ApiMessageResponse response = authService.sendOTP(request);
@@ -41,10 +51,18 @@ public class AuthController {
         return new ResponseEntity<>(authService.verifyOTP(userDto,OTP), HttpStatus.OK);
     }
     @PostMapping("/signIn")
-    public ResponseEntity<AuthenticationResponse> signIn(
+    public ResponseEntity<?> signIn(
             @Valid  @RequestBody AuthenticationRequest request
     ) {
-        return new ResponseEntity<>(authService.signIn(request), HttpStatus.OK);
+        User user = userRepository.findByMobileNumber(request.getMobileNumber()).orElseThrow(() -> new ResourceNotFoundException("user not found with this userId !"));
+        if(user.isBlock()){
+            ApiMessageResponse response = ApiMessageResponse.
+                    builder().message("Something went wrong !").success(false).status(HttpStatus.NOT_FOUND).build();
+            return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        }else{
+            return new ResponseEntity<>(authService.signIn(request), HttpStatus.OK);
+        }
+
     }
 
     @PostMapping("/refreshToken")
@@ -53,5 +71,21 @@ public class AuthController {
             HttpServletResponse response
     ) throws IOException {
         authService.refreshToken(request, response);
+    }
+
+    @PutMapping("/blockUser/{userId}")
+    public ResponseEntity<ApiMessageResponse> blockUser(@Valid @PathVariable("userId") Integer userId){
+        authService.blockUser(userId);
+        ApiMessageResponse response = ApiMessageResponse.builder().
+                message("Block user successfully !").status(HttpStatus.OK).success(true).build();
+        return  new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PutMapping("/unBlockUser/{userId}")
+    public ResponseEntity<ApiMessageResponse> unBlockUser(@Valid @PathVariable("userId") Integer userId){
+        authService.unBlockUser(userId);
+        ApiMessageResponse response = ApiMessageResponse.builder().
+                message("Unblock user successfully !").status(HttpStatus.OK).success(true).build();
+        return  new ResponseEntity<>(response,HttpStatus.OK);
     }
 }
