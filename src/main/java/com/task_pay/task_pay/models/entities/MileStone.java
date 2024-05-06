@@ -21,4 +21,7 @@ public class MileStone {
     @JoinColumn(name = "taskId")
     private Task task;
 
+    @OneToOne(mappedBy = "mileStone",cascade = CascadeType.ALL,orphanRemoval=true)
+    private MileStonePayment mileStonePayment;
+
 }

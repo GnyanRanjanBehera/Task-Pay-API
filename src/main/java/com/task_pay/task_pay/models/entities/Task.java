@@ -48,6 +48,9 @@ public class Task {
     @OneToMany(mappedBy = "task",cascade = CascadeType.ALL,orphanRemoval=true)
     private List<TaskFile> taskFiles=new ArrayList<>();
 
+    @OneToOne(mappedBy = "task",cascade = CascadeType.ALL,orphanRemoval=true)
+    private Payment payment;
+
     @OneToMany(mappedBy = "task",cascade = CascadeType.ALL,orphanRemoval=true)
     private List<MileStone> mileStones=new ArrayList<>();
 
