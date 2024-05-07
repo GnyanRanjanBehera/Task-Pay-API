@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,6 +47,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+
+    @Value("${user.image.path}")
+    private  String userImagePath;
 
 
     @Override
@@ -79,6 +84,7 @@ public class AuthServiceImpl implements AuthService {
                         success(true).status(HttpStatus.NOT_FOUND).build();
             }
         }
+
 
         return ApiMessageResponse.builder().
                 message("OTP send successfully").

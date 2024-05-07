@@ -1,16 +1,26 @@
 package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.models.dtos.UserDto;
+import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.UserService;
 import com.task_pay.task_pay.utils.request.SendOtpRequest;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
+import com.task_pay.task_pay.utils.response.ImageResponse;
 import com.task_pay.task_pay.utils.response.PageableResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @Validated
@@ -18,6 +28,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
+
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${user.image.path}")
+    private  String userImagePath;
 
     @GetMapping("/fetchUserById{userId}")
     public  ResponseEntity<UserDto> fetchUserById(@Valid @PathVariable("userId") Integer userId){
@@ -77,5 +94,35 @@ public class UserController {
         userService.deleteUser(userId);
         ApiMessageResponse response = ApiMessageResponse.builder().success(true).message("User delete successfully !").status(HttpStatus.OK).build();
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/uploadUserImage/{userId}")
+    public ResponseEntity<ImageResponse> uploadUserImage(
+            @RequestParam("userImage") MultipartFile image, @PathVariable int userId) throws IOException {
+        UserDto user = userService.fetchUserById(userId);
+        if(user!=null){
+            if (user.getProfilePic() != null && !user.getProfilePic().isEmpty()) {
+                String fullPath = userImagePath + user.getProfilePic();
+                fileService.deleteImage(fullPath);
+            }
+            String imageName = fileService.uploadImage(image, userImagePath);
+            user.setProfilePic(imageName);
+            userService.updateUser(user);
+            ImageResponse imageResponse=ImageResponse.builder().imageName(imageName).message("success uploaded image").success(true).status(HttpStatus.CREATED).build();
+            return  new ResponseEntity<>(imageResponse,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(ImageResponse.builder().build(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+
+    @GetMapping("/serveUserImage/{userId}")
+    public void serverUserImage(@PathVariable int userId, HttpServletResponse response) throws IOException {
+        UserDto user = userService.fetchUserById(userId);
+        InputStream resource = fileService.getResource(userImagePath, user.getProfilePic());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource,response.getOutputStream());
     }
 }
