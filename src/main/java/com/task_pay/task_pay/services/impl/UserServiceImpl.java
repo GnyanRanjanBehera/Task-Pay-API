@@ -1,5 +1,4 @@
 package com.task_pay.task_pay.services.impl;
-
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.User;
@@ -33,8 +32,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper mapper;
     @Override
-    public AuthenticationResponse updateUser(UserDto userDto) {
-        return null;
+    public AuthenticationResponse updateProfile(UserDto userDto) {
+        User user = userRepository.findById(userDto.getUserId()).
+                orElseThrow(() -> new ResourceNotFoundException("User not found with given userId !"));
+        user.setProfilePic(userDto.getProfilePic());
+        User saveUser = userRepository.save(user);
+        return AuthenticationResponse.builder().userDto(mapper.map(saveUser,UserDto.class)).build();
     }
 
     @Override

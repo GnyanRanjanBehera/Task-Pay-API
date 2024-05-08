@@ -26,18 +26,18 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
-    @PostMapping(value = "/assignTask",consumes = {MediaType.ALL_VALUE})
+    @PostMapping("/assignTask")
     public ResponseEntity<TaskDto> assignTask(
             @RequestParam(value = "senderUserId") Integer senderUserId,
             @RequestParam(value = "receiverUserId") Integer receiverUserId,
             @RequestParam(value = "taskName") String taskName,
             @RequestParam(value = "taskPrice") Integer taskPrice,
             @RequestParam(value = "taskAbout") String taskAbout,
-            @RequestParam(value ="taskFiles",required = false)List<MultipartFile> taskFiles,
-            @RequestBody  List<MileStoneDto> mileStoneDtos
+            @RequestParam(value ="taskFiles",required = false) List<MultipartFile> taskFiles,
+            @RequestBody  List<MileStoneDto> mileStones
 
             ){
-        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,taskFiles,mileStoneDtos);
+        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,taskFiles,mileStones);
         return  new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 

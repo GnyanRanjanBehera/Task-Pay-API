@@ -2,7 +2,6 @@ package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.UserService;
-import com.task_pay.task_pay.utils.request.SendOtpRequest;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import com.task_pay.task_pay.utils.response.ImageResponse;
@@ -97,18 +96,19 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/uploadUserImage/{userId}")
+    @PostMapping("/uploadUserImage/{userId}")
     public ResponseEntity<ImageResponse> uploadUserImage(
             @RequestParam("userImage") MultipartFile image, @PathVariable int userId) throws IOException {
         UserDto user = userService.fetchUserById(userId);
         if(user!=null){
             if (user.getProfilePic() != null && !user.getProfilePic().isEmpty()) {
+                System.out.println("enterd the image present value");
                 String fullPath = userImagePath + user.getProfilePic();
                 fileService.deleteImage(fullPath);
             }
             String imageName = fileService.uploadImage(image, userImagePath);
             user.setProfilePic(imageName);
-            userService.updateUser(user);
+            userService.updateProfile(user);
             ImageResponse imageResponse=ImageResponse.builder().imageName(imageName).message("success uploaded image").success(true).status(HttpStatus.CREATED).build();
             return  new ResponseEntity<>(imageResponse,HttpStatus.OK);
         }else{
