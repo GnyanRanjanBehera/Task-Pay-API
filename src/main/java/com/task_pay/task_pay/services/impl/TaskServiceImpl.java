@@ -14,6 +14,7 @@ import com.task_pay.task_pay.repositories.TaskRepository;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.services.TaskService;
 import com.task_pay.task_pay.utils.Helper;
+import com.task_pay.task_pay.utils.request.AssignTaskRequest;
 import com.task_pay.task_pay.utils.response.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +51,13 @@ public class TaskServiceImpl implements TaskService {
                               String taskName, Integer taskPrice,
                               String taskAbout,List<MultipartFile> images,
                               List<MileStoneDto> mileStoneDtos) {
+
         User senderUser = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
         User receiverUser = userRepository.findById(assignUserId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
+
+
         if(Objects.equals(senderUser.getUserType(), "Buyer")){
             receiverUser.setUserType("Seller");
         }else{
@@ -73,23 +77,72 @@ public class TaskServiceImpl implements TaskService {
                 .build();
         Task saveTask = taskRepository.save(mapper.map(taskDto,Task.class));
 
-        List<TaskFile> taskFiles = new ArrayList<>();
-        for (MultipartFile  file:images){
-            TaskFile taskFile = new TaskFile();
-            taskFile.setTask(saveTask);
-            taskFile.setUrl(file.toString());
-            taskFiles.add(taskFile);
+//        List<TaskFile> taskFiles = new ArrayList<>();
+//        for (MultipartFile  file:images){
+//            TaskFile taskFile = new TaskFile();
+//            taskFile.setTask(saveTask);
+//            taskFile.setUrl(file.toString());
+//            taskFiles.add(taskFile);
+//
+//        }
 
-        }
+//        List<MileStone> milestones = new ArrayList<>();
+//        for (MileStoneDto milestoneDto : mileStoneDtos) {
+//            MileStone milestone = mapper.map(milestoneDto, MileStone.class);
+//            milestone.setTask(saveTask);
+//            milestones.add(milestone);
+//        }
+////        saveTask.setTaskFiles(taskFiles);
+//        saveTask.setMileStones(milestones);
+        taskRepository.save(saveTask);
+        return mapper.map(saveTask,TaskDto.class);
+    }
 
-        List<MileStone> milestones = new ArrayList<>();
-        for (MileStoneDto milestoneDto : mileStoneDtos) {
-            MileStone milestone = mapper.map(milestoneDto, MileStone.class);
-            milestone.setTask(saveTask);
-            milestones.add(milestone);
+    @Override
+    public TaskDto assignTask1(AssignTaskRequest request) {
+        System.out.println("=========request========="+request);
+
+        User senderUser = userRepository.findById(request.getSenderUserId()).orElseThrow(
+                () -> new ResourceNotFoundException("User not found with this id !"));
+        User receiverUser = userRepository.findById(request.getReceiverUserId()).orElseThrow(
+                () -> new ResourceNotFoundException("User not found with this id !"));
+
+        if(Objects.equals(senderUser.getUserType(), "Buyer")){
+            receiverUser.setUserType("Seller");
+        }else{
+            receiverUser.setUserType("Buyer");
         }
-        saveTask.setTaskFiles(taskFiles);
-        saveTask.setMileStones(milestones);
+        User saveReceiverUser = userRepository.save(receiverUser);
+        TaskDto taskDto = TaskDto.builder()
+                .taskName(request.getTaskName())
+                .taskPrice(request.getTaskPrice())
+                .taskAbout(request.getTaskAbout())
+                .taskStatus("Created")
+                .senderUserType(senderUser.getUserType())
+                .receiverUserType(saveReceiverUser.getUserType())
+                .createAt(new Date())
+                .senderUser(mapper.map(senderUser, UserDto.class))
+                .receiverUser(mapper.map(saveReceiverUser, UserDto.class))
+                .build();
+        Task saveTask = taskRepository.save(mapper.map(taskDto,Task.class));
+
+//        List<TaskFile> taskFiles = new ArrayList<>();
+//        for (MultipartFile  file:request.getTaskFiles()){
+//            TaskFile taskFile = new TaskFile();
+//            taskFile.setTask(saveTask);
+//            taskFile.setUrl(file.toString());
+//            taskFiles.add(taskFile);
+//
+//        }
+//        saveTask.setTaskFiles(taskFiles);
+//        List<MileStone> milestones = new ArrayList<>();
+//        for (MileStoneDto milestoneDto : request.getMileStones()) {
+//            MileStone milestone = mapper.map(milestoneDto, MileStone.class);
+//            milestone.setTask(saveTask);
+//            milestones.add(milestone);
+//        }
+//
+//        saveTask.setMileStones(milestones);
         taskRepository.save(saveTask);
         return mapper.map(saveTask,TaskDto.class);
     }
