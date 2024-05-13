@@ -7,7 +7,7 @@ import com.task_pay.task_pay.utils.response.PageableResponse;
 
 public interface UserService {
 
-    AuthenticationResponse updateUser(UserDto userDto);
+    AuthenticationResponse updateProfile(UserDto userDto);
     AuthenticationResponse updateUserType(Integer userId, String userType);
     AuthenticationResponse updateMobileNumber(Integer userId,String mobileNumber);
     ApiMessageResponse updatePassword(Integer userId, String currPassword, String newPassword);

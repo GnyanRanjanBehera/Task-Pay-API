@@ -8,8 +8,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 public class MileStoneDto {
-    private Integer id;
+//    private Integer id;
     private String mileStoneName;
     private Integer mileStonePrice;
 }

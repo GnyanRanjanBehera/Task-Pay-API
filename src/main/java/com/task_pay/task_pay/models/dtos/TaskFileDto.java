@@ -7,7 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 public class TaskFileDto {
-    private Integer fileId;
+//    private Integer fileId;
     private MultipartFile url;
 }

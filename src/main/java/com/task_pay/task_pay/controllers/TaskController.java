@@ -4,6 +4,7 @@ import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
 import com.task_pay.task_pay.models.dtos.TaskFileDto;
 import com.task_pay.task_pay.services.TaskService;
+import com.task_pay.task_pay.utils.request.AssignTaskRequest;
 import com.task_pay.task_pay.utils.response.PageableResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +27,29 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
-    @PostMapping(value = "/assignTask",consumes = {MediaType.ALL_VALUE})
+    @PostMapping( value = "/assignTask",consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TaskDto> assignTask(
             @RequestParam(value = "senderUserId") Integer senderUserId,
             @RequestParam(value = "receiverUserId") Integer receiverUserId,
             @RequestParam(value = "taskName") String taskName,
             @RequestParam(value = "taskPrice") Integer taskPrice,
             @RequestParam(value = "taskAbout") String taskAbout,
-            @RequestParam(value ="taskFiles",required = false)List<MultipartFile> taskFiles,
-            @RequestBody  List<MileStoneDto> mileStoneDtos
-
+            @RequestPart("file") MultipartFile[] files,
+            @RequestBody(required = false)  List<MileStoneDto> mileStones
             ){
-        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,taskFiles,mileStoneDtos);
-        return  new ResponseEntity<>(taskDto, HttpStatus.OK);
+        System.out.println("=====image controller===="+files);
+        System.out.println("=====milestone controller===="+mileStones);
+//        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,files,mileStones);
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(  value = "/assignTask1",consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TaskDto> assignTask2(
+            @ModelAttribute AssignTaskRequest request){
+        TaskDto taskDto = taskService.assignTask1(request);
+        return  new ResponseEntity<>(taskDto,HttpStatus.OK);
+    }
+
 
     @GetMapping("/fetchBuyerTasks/{userId}")
     public ResponseEntity<PageableResponse<TaskDto>> fetchBuyerTasks(
