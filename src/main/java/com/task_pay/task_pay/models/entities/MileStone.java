@@ -1,5 +1,4 @@
 package com.task_pay.task_pay.models.entities;
-
 import jakarta.persistence.*;
 import lombok.*;
 

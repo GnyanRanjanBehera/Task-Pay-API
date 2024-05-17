@@ -34,7 +34,7 @@ public class Task {
     @Column(nullable = false)
     private String receiverUserType;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Date createdAt;
 
     @ManyToOne
