@@ -102,7 +102,6 @@ public class UserController {
         UserDto user = userService.fetchUserById(userId);
         if(user!=null){
             if (user.getProfilePic() != null && !user.getProfilePic().isEmpty()) {
-                System.out.println("enterd the image present value");
                 String fullPath = userImagePath + user.getProfilePic();
                 fileService.deleteImage(fullPath);
             }

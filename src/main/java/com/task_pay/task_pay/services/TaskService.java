@@ -6,6 +6,7 @@ import com.task_pay.task_pay.utils.request.AssignTaskRequest;
 import com.task_pay.task_pay.utils.response.PageableResponse;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -13,9 +14,9 @@ public interface TaskService {
 
     TaskDto assignTask(Integer userId, Integer assignUserId,
                        String taskName, Integer taskPrice,
-                       String taskAbout, List<MultipartFile> taskFiles, List<MileStoneDto> mileStoneDtos);
+                       String taskAbout, List<MultipartFile> taskFiles,List<MileStoneDto> mileStoneDtos) throws IOException;
 
-    TaskDto assignTask1(AssignTaskRequest request);
+    List<MileStoneDto> getJson(String milestones) throws IOException;
 
     PageableResponse<TaskDto> fetchBuyerTasks(Integer userId,int pageNumber,int pageSize,String sortBy, String sortDir);
     PageableResponse<TaskDto> fetchSellerTasks(Integer userId,int pageNumber,int pageSize,String sortBy, String sortDir);

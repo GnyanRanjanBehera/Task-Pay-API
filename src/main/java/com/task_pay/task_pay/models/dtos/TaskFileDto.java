@@ -9,6 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @Data
 public class TaskFileDto {
-//    private Integer fileId;
-    private MultipartFile url;
+    private Integer fileId;
+    private String url;
 }

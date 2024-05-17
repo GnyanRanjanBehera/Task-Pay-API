@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,30 +28,23 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
-    @PostMapping( value = "/assignTask",consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value="/assignTask",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<TaskDto> assignTask(
             @RequestParam(value = "senderUserId") Integer senderUserId,
             @RequestParam(value = "receiverUserId") Integer receiverUserId,
             @RequestParam(value = "taskName") String taskName,
             @RequestParam(value = "taskPrice") Integer taskPrice,
             @RequestParam(value = "taskAbout") String taskAbout,
-            @RequestPart("file") MultipartFile[] files,
-            @RequestBody(required = false)  List<MileStoneDto> mileStones
-            ){
-        System.out.println("=====image controller===="+files);
-        System.out.println("=====milestone controller===="+mileStones);
-//        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,files,mileStones);
-        return  new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping(  value = "/assignTask1",consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<TaskDto> assignTask2(
-            @ModelAttribute AssignTaskRequest request){
-        TaskDto taskDto = taskService.assignTask1(request);
+            @RequestPart(value = "file",required = false) List<MultipartFile> files,
+            @RequestPart(value = "mileStones", required = false)  String mileStones
+            ) throws IOException {
+        List<MileStoneDto> jsonMilestone = null;
+        if (mileStones != null && !mileStones.isEmpty()) {
+            jsonMilestone = taskService.getJson(mileStones);
+        }
+        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,files,jsonMilestone);
         return  new ResponseEntity<>(taskDto,HttpStatus.OK);
     }
-
-
     @GetMapping("/fetchBuyerTasks/{userId}")
     public ResponseEntity<PageableResponse<TaskDto>> fetchBuyerTasks(
             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
