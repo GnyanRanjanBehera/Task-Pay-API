@@ -24,6 +24,9 @@ public class Payment {
     private double amount;
 
     @Column(nullable = false)
+    private double tax;
+
+    @Column(nullable = false)
     private Date blockAt;
 
     @Column(nullable = false)

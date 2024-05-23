@@ -21,7 +21,7 @@ public class TaskDto {
     private String taskName;
 
     @NotNull(message = "required taskPrice !")
-    private Integer taskPrice;
+    private double taskPrice;
 
     @NotBlank(message = "required taskAbout !")
     private String taskAbout;

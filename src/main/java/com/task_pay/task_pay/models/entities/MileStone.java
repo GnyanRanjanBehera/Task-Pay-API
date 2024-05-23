@@ -2,6 +2,8 @@ package com.task_pay.task_pay.models.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 
 @Getter
 @Setter
@@ -14,7 +16,9 @@ public class MileStone {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer mileStoneId;
     private String mileStoneName;
-    private String mileStonePrice;
+    private double mileStonePrice;
+    private String startDate;
+    private String endDate;
 
     @ManyToOne
     @JoinColumn(name = "taskId")
