@@ -18,9 +18,14 @@ public interface TaskService {
 
     List<MileStoneDto> getJson(String milestones) throws IOException;
 
+
+    TaskDto fetchTaskById(Integer taskId);
+
     PageableResponse<TaskDto> fetchBuyerTasks(Integer userId,int pageNumber,int pageSize,String sortBy, String sortDir);
     PageableResponse<TaskDto> fetchSellerTasks(Integer userId,int pageNumber,int pageSize,String sortBy, String sortDir);
 
     TaskDto acceptTask(Integer userId,Integer taskId);
+
+    TaskDto declineTask(Integer userId,Integer taskId);
 
 }

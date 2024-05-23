@@ -13,12 +13,15 @@ import com.task_pay.task_pay.repositories.MileStoneRepository;
 import com.task_pay.task_pay.repositories.TaskFileRepository;
 import com.task_pay.task_pay.repositories.TaskRepository;
 import com.task_pay.task_pay.repositories.UserRepository;
+import com.task_pay.task_pay.services.FCMService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.TaskService;
 import com.task_pay.task_pay.utils.Helper;
-import com.task_pay.task_pay.utils.request.AssignTaskRequest;
+import com.task_pay.task_pay.utils.request.NotificationRequest;
 import com.task_pay.task_pay.utils.response.PageableResponse;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -56,6 +60,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private FCMService fcmService;
+
+    private final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
     @Override
     public TaskDto assignTask(Integer userId , Integer assignUserId,
                               String taskName, Integer taskPrice,
@@ -106,8 +115,6 @@ public class TaskServiceImpl implements TaskService {
             }
             saveTask.setMileStones(milestones);
         }
-
-
         Task save = taskRepository.save(saveTask);
         return mapper.map(save,TaskDto.class);
     }
@@ -116,6 +123,12 @@ public class TaskServiceImpl implements TaskService {
     public List<MileStoneDto> getJson(String milestones)throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(milestones, new TypeReference<List<MileStoneDto>>() {});
+    }
+
+    @Override
+    public TaskDto fetchTaskById(Integer taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with this id !"));
+        return mapper.map(task,TaskDto.class);
     }
 
     @Override
@@ -141,6 +154,17 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with this taskId !"));
         task.setTaskStatus("Accepted");
+        Task saveTask = taskRepository.save(task);
+        return mapper.map(saveTask, TaskDto.class);
+    }
+
+    @Override
+    public TaskDto declineTask(Integer userId, Integer taskId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId !"));
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with this taskId !"));
+        task.setTaskStatus("Declined");
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
     }

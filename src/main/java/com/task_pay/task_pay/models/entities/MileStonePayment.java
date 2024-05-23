@@ -27,10 +27,14 @@ public class MileStonePayment {
     private double amount;
 
     @Column(nullable = false)
+    private double tax;
+
+    @Column(nullable = false)
     private Date blockAt;
 
     @Column(nullable = false)
     private Date releasedAt;
+
 
     @OneToOne
     @JoinColumn(name = "mileStoneId")

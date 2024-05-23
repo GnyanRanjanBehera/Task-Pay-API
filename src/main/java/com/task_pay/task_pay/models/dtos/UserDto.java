@@ -29,6 +29,8 @@ public class UserDto {
     @NotBlank(message = "password is blank")
     private String password;
 
+    private String fcmToken;
+
     private String expertIn;
 
     private String about;

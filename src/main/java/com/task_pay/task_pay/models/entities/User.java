@@ -41,9 +41,10 @@ public class User implements UserDetails {
     @Column(nullable = false,unique = true)
     private String invitationCode;
 
+    private String fcmToken;
+
     @Column(nullable = false)
     private Date otpVerifiedAt;
-
 
     private Date updatedAt;
 

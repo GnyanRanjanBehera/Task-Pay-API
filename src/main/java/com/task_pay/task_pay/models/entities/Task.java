@@ -20,7 +20,7 @@ public class Task {
     private String taskName;
 
     @Column(nullable = false)
-    private Integer taskPrice;
+    private double taskPrice;
 
     @Column(nullable = false)
     private String taskAbout;
