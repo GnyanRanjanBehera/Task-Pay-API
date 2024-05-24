@@ -1,4 +1,5 @@
 package com.task_pay.task_pay.models.entities;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,8 +18,12 @@ public class MileStone {
     private Integer mileStoneId;
     private String mileStoneName;
     private double mileStonePrice;
-    private String startDate;
-    private String endDate;
+
+
+    private Date startDate;
+
+
+    private Date endDate;
 
     @ManyToOne
     @JoinColumn(name = "taskId")

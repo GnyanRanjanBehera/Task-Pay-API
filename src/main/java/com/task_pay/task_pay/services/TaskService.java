@@ -7,6 +7,7 @@ import com.task_pay.task_pay.utils.response.PageableResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -14,7 +15,7 @@ public interface TaskService {
 
     TaskDto assignTask(Integer userId, Integer assignUserId,
                        String taskName, Integer taskPrice,
-                       String taskAbout, List<MultipartFile> taskFiles,List<MileStoneDto> mileStoneDtos) throws IOException;
+                       String taskAbout, List<MultipartFile> taskFiles,List<MileStoneDto> mileStoneDtos) throws IOException, ParseException;
 
     List<MileStoneDto> getJson(String milestones) throws IOException;
 

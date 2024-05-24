@@ -1,10 +1,12 @@
 package com.task_pay.task_pay.models.dtos;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.task_pay.task_pay.models.entities.TaskFile;
+import com.task_pay.task_pay.models.enums.TaskStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -32,9 +34,11 @@ public class TaskDto {
     @JsonIgnore
     private String receiverUserType;
 
-    private String taskStatus;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus taskStatus;
 
-    private Date createAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date createdAt;
 
     private UserDto senderUser;
 

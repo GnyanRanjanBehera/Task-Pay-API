@@ -9,6 +9,7 @@ import com.task_pay.task_pay.models.entities.MileStone;
 import com.task_pay.task_pay.models.entities.Task;
 import com.task_pay.task_pay.models.entities.TaskFile;
 import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.enums.TaskStatus;
 import com.task_pay.task_pay.repositories.MileStoneRepository;
 import com.task_pay.task_pay.repositories.TaskFileRepository;
 import com.task_pay.task_pay.repositories.TaskRepository;
@@ -17,7 +18,6 @@ import com.task_pay.task_pay.services.FCMService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.TaskService;
 import com.task_pay.task_pay.utils.Helper;
-import com.task_pay.task_pay.utils.request.NotificationRequest;
 import com.task_pay.task_pay.utils.response.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -33,8 +33,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -69,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto assignTask(Integer userId , Integer assignUserId,
                               String taskName, Integer taskPrice,
                               String taskAbout, List<MultipartFile> images,
-                              List<MileStoneDto> mileStoneDtos) throws IOException {
+                              List<MileStoneDto> mileStoneDtos) throws IOException, ParseException {
 
         User senderUser = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
@@ -87,10 +87,10 @@ public class TaskServiceImpl implements TaskService {
                 .taskName(taskName)
                 .taskPrice(taskPrice)
                 .taskAbout(taskAbout)
-                .taskStatus("Created")
+                .taskStatus(TaskStatus.CREATED)
                 .senderUserType(senderUser.getUserType())
                 .receiverUserType(saveReceiverUser.getUserType())
-                .createAt(new Date())
+                .createdAt(new Date())
                 .senderUser(mapper.map(senderUser, UserDto.class))
                 .receiverUser(mapper.map(saveReceiverUser, UserDto.class))
                 .build();
@@ -109,9 +109,20 @@ public class TaskServiceImpl implements TaskService {
         if(mileStoneDtos!=null) {
             List<MileStone> milestones = new ArrayList<>();
             for (MileStoneDto milestoneDto : mileStoneDtos) {
-                MileStone milestone = mapper.map(milestoneDto, MileStone.class);
-                milestone.setTask(saveTask);
-                milestones.add(milestone);
+//                MileStone milestone = mapper.map(milestoneDto, MileStone.class);
+                MileStone mileStone=new MileStone();
+                mileStone.setMileStoneName(milestoneDto.getMileStoneName());
+                mileStone.setMileStonePrice(milestoneDto.getMileStonePrice());
+                if(milestoneDto.getStartDate() !=null &&
+                        milestoneDto.getEndDate()!=null &&
+                        !milestoneDto.getEndDate().isEmpty() &&
+                        !milestoneDto.getStartDate().isEmpty()
+                ){
+                    mileStone.setStartDate(Helper.convertStringToDate(milestoneDto.getStartDate()));
+                    mileStone.setEndDate(Helper.convertStringToDate(milestoneDto.getEndDate()));
+                }
+                mileStone.setTask(saveTask);
+                milestones.add(mileStone);
             }
             saveTask.setMileStones(milestones);
         }
@@ -153,7 +164,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId !"));
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with this taskId !"));
-        task.setTaskStatus("Accepted");
+        task.setTaskStatus(TaskStatus.ACCEPTED);
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
     }
@@ -164,7 +175,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId !"));
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with this taskId !"));
-        task.setTaskStatus("Declined");
+        task.setTaskStatus(TaskStatus.DECLINED);
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
     }

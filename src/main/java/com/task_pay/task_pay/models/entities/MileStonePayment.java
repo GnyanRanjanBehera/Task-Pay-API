@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.models.entities;
 
 
+import com.task_pay.task_pay.models.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,26 +16,35 @@ import java.util.Date;
 public class MileStonePayment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer mPayId;
+    private Integer milestonePaymentId;
 
     @Column(nullable = false)
-    private String payStatus;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus milestonePaymentStatus;
 
     @Column(nullable = false)
-    private String payMethod;
+    private String milestonePaymentMethod;
 
     @Column(nullable = false)
-    private double amount;
+    private double milestonePaymentAmount;
 
     @Column(nullable = false)
-    private double tax;
+    private double milestonePaymentTax;
 
     @Column(nullable = false)
-    private Date blockAt;
+    private Date milestonePaymentBlockAt;
 
-    @Column(nullable = false)
-    private Date releasedAt;
+    private Date milestonePaymentReleasedRequestAt;
 
+    private Date milestonePaymentReleasedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "senderUserId")
+    private User senderUser;
+
+    @ManyToOne
+    @JoinColumn(name = "receiverUserId")
+    private User receiverUser;
 
     @OneToOne
     @JoinColumn(name = "mileStoneId")

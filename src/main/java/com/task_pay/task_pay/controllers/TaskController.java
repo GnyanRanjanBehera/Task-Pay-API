@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ public class TaskController {
             @RequestParam(value = "taskAbout") String taskAbout,
             @RequestPart(value = "file",required = false) List<MultipartFile> files,
             @RequestPart(value = "mileStones", required = false)  String mileStones
-            ) throws IOException {
+            ) throws IOException, ParseException {
         List<MileStoneDto> jsonMilestone = null;
         if (mileStones != null && !mileStones.isEmpty()) {
             jsonMilestone = taskService.getJson(mileStones);
