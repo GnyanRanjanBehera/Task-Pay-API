@@ -1,4 +1,5 @@
 package com.task_pay.task_pay.models.entities;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -46,7 +47,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Date otpVerifiedAt;
 
+
     private Date updatedAt;
+
 
     @Column(nullable = false)
     private Date createdAt;
@@ -68,6 +71,20 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "receiverUser",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Task> receivingTasks=new ArrayList<>();
+
+    @OneToMany(mappedBy = "senderUser",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Payment> sendingPayments=new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiverUser",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Task> receivingPayments=new ArrayList<>();
+
+    @OneToMany(mappedBy = "senderUser",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<MileStonePayment> sendingMilestonePayments=new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiverUser",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<MileStonePayment> receivingMilestonePayments=new ArrayList<>();
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

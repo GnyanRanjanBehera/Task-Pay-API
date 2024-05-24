@@ -1,4 +1,5 @@
 package com.task_pay.task_pay.models.entities;
+import com.task_pay.task_pay.models.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
@@ -12,25 +13,35 @@ import java.util.Date;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer payId;
+    private Integer paymentId;
 
     @Column(nullable = false)
-    private String payStatus;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
     @Column(nullable = false)
-    private String payMethod;
+    private String paymentMethod;
 
     @Column(nullable = false)
-    private double amount;
+    private double paymentAmount;
 
     @Column(nullable = false)
-    private double tax;
+    private double paymentTax;
 
     @Column(nullable = false)
-    private Date blockAt;
+    private Date paymentBlockAt;
 
-    @Column(nullable = false)
-    private Date releasedAt;
+    private Date paymentReleasedRequestAt;
+
+    private Date paymentReleasedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "senderUserId")
+    private User senderUser;
+
+    @ManyToOne
+    @JoinColumn(name = "receiverUserId")
+    private User receiverUser;
 
     @OneToOne
     @JoinColumn(name = "taskId")

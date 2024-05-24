@@ -1,4 +1,5 @@
 package com.task_pay.task_pay.models.dtos;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -15,6 +16,8 @@ public class MileStoneDto {
     private Integer id;
     private String mileStoneName;
     private double mileStonePrice;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String endDate;
 }
