@@ -10,6 +10,7 @@ import com.task_pay.task_pay.models.entities.Task;
 import com.task_pay.task_pay.models.entities.TaskFile;
 import com.task_pay.task_pay.models.entities.User;
 import com.task_pay.task_pay.models.enums.TaskStatus;
+import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.MileStoneRepository;
 import com.task_pay.task_pay.repositories.TaskFileRepository;
 import com.task_pay.task_pay.repositories.TaskRepository;
@@ -77,10 +78,10 @@ public class TaskServiceImpl implements TaskService {
                 () -> new ResourceNotFoundException("User not found with this id !"));
 
 
-        if(Objects.equals(senderUser.getUserType(), "Buyer")){
-            receiverUser.setUserType("Seller");
+        if(Objects.equals(senderUser.getUserType(), UserType.BUYER)){
+            receiverUser.setUserType(UserType.SELLER);
         }else{
-            receiverUser.setUserType("Buyer");
+            receiverUser.setUserType(UserType.BUYER);
         }
         User saveReceiverUser = userRepository.save(receiverUser);
         TaskDto taskDto = TaskDto.builder()

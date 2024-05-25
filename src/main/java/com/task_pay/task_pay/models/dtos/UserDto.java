@@ -1,6 +1,10 @@
 package com.task_pay.task_pay.models.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.task_pay.task_pay.models.enums.Role;
+import com.task_pay.task_pay.models.enums.UserType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.util.Date;
@@ -13,8 +17,8 @@ import java.util.Date;
 @Builder
 public class UserDto {
     private int userId;
-
-    private String userType;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
     @NotBlank(message = "name is blank")
     private String name;
@@ -26,6 +30,9 @@ public class UserDto {
 
     @NotBlank(message = "email is blank")
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @NotBlank(message = "password is blank")
     private String password;

@@ -2,6 +2,7 @@ package com.task_pay.task_pay.services.impl;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.services.UserService;
 import com.task_pay.task_pay.utils.Helper;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AuthenticationResponse updateUserType(Integer userId, String userType) {
+    public AuthenticationResponse updateUserType(Integer userId, UserType userType) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId !"));
         user.setUserType(userType);

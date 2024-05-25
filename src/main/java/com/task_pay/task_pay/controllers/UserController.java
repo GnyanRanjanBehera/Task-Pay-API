@@ -1,5 +1,6 @@
 package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.models.dtos.UserDto;
+import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.UserService;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
@@ -41,10 +42,10 @@ public class UserController {
         return new ResponseEntity<>(userDto,HttpStatus.OK);
     }
 
-    @PutMapping("/updateUserType")
+    @PutMapping("/updateUserType/{userId}")
     public  ResponseEntity<AuthenticationResponse> updateUserType(
-          @RequestParam(value = "userId") Integer userId,
-          @RequestParam(value = "userType") String userType
+            @PathVariable(required = true) Integer userId,
+            @RequestParam(value = "userType") UserType userType
     ){
         AuthenticationResponse authenticationResponse = userService.updateUserType(userId, userType);
         return new ResponseEntity<>(authenticationResponse,HttpStatus.OK);

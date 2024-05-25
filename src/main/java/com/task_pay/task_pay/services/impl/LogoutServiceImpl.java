@@ -1,5 +1,4 @@
 package com.task_pay.task_pay.services.impl;
-
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.repositories.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LogoutService implements LogoutHandler {
+public class LogoutServiceImpl implements LogoutHandler {
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -22,6 +20,7 @@ public class LogoutService implements LogoutHandler {
                        Authentication authentication) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
+        System.out.println("Calling the function of logout===============");
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             return;
         }

@@ -2,6 +2,7 @@ package com.task_pay.task_pay.models.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.task_pay.task_pay.models.enums.TaskStatus;
+import com.task_pay.task_pay.models.enums.UserType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
@@ -28,11 +29,12 @@ public class TaskDto {
     @NotBlank(message = "required taskAbout !")
     private String taskAbout;
 
-    @JsonIgnore
-    private String senderUserType;
 
-    @JsonIgnore
-    private String receiverUserType;
+    @Enumerated(EnumType.STRING)
+    private UserType senderUserType;
+
+    @Enumerated(EnumType.STRING)
+    private UserType receiverUserType;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;

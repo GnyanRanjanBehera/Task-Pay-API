@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.services;
 
 import com.task_pay.task_pay.models.dtos.UserDto;
+import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.utils.response.ApiMessageResponse;
 import com.task_pay.task_pay.utils.response.AuthenticationResponse;
 import com.task_pay.task_pay.utils.response.PageableResponse;
@@ -8,7 +9,7 @@ import com.task_pay.task_pay.utils.response.PageableResponse;
 public interface UserService {
 
     AuthenticationResponse updateProfile(UserDto userDto);
-    AuthenticationResponse updateUserType(Integer userId, String userType);
+    AuthenticationResponse updateUserType(Integer userId, UserType userType);
     AuthenticationResponse updateMobileNumber(Integer userId,String mobileNumber);
     ApiMessageResponse updatePassword(Integer userId, String currPassword, String newPassword);
     UserDto fetchUserById(Integer userId);
