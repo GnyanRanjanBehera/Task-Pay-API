@@ -5,6 +5,7 @@ import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.Token;
 import com.task_pay.task_pay.models.entities.User;
 import com.task_pay.task_pay.models.enums.TokenType;
+import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.TokenRepository;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.security.JwtService;
@@ -96,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthenticationResponse verifyOTP(UserDto userDto,String OTP) {
         String invitationCode = generateInvitationCode();
      User user=User.builder()
-                .userType("Buyer")
+                .userType(UserType.BUYER)
                 .name(userDto.getName())
                 .profilePic(userDto.getProfilePic())
                 .email(userDto.getEmail())

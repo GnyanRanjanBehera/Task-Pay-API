@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.models.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.task_pay.task_pay.models.enums.TaskStatus;
+import com.task_pay.task_pay.models.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public class Task {
     private String senderUserType;
 
     @Column(nullable = false)
-    private String receiverUserType;
+    @Enumerated(EnumType.STRING)
+    private UserType receiverUserType;
 
     @Column(nullable = false)
     private Date createdAt;

@@ -1,5 +1,7 @@
 package com.task_pay.task_pay.models.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.task_pay.task_pay.models.enums.Role;
+import com.task_pay.task_pay.models.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -19,7 +21,8 @@ public class User implements UserDetails {
     private Integer userId;
 
     @Column(nullable = false)
-    private String userType;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 
     @Column(nullable = false)
     private String name;
@@ -29,6 +32,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false,unique = true)
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(nullable = false)
     private String password;

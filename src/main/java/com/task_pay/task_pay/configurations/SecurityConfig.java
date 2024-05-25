@@ -35,6 +35,21 @@ public class SecurityConfig {
     @Autowired
     private  LogoutHandler logoutHandler;
 
+
+    private final String[] PUBLIC_URLS = {
+            "/api/auth/**",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(withDefaults())
@@ -42,20 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 // no restrictions
-                                .requestMatchers(
-                                        "/api/auth/**",
-                                        "/v2/api-docs",
-                                        "/v3/api-docs",
-                                        "/v3/api-docs/**",
-                                        "/swagger-resources",
-                                        "/swagger-resources/**",
-                                        "/configuration/ui",
-                                        "/configuration/security",
-                                        "/swagger-ui/**",
-                                        "/webjars/**",
-                                        "/swagger-ui.html"
-
-                                )
+                                .requestMatchers(PUBLIC_URLS)
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
