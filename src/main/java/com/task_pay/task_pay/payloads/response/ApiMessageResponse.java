@@ -1,4 +1,4 @@
-package com.task_pay.task_pay.utils.response;
+package com.task_pay.task_pay.payloads.response;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;
@@ -8,8 +8,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ImageResponse {
-    private  String imageName;
+public class ApiMessageResponse {
     private  String message;
     private  boolean success;
     private HttpStatus status;

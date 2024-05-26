@@ -1,4 +1,4 @@
-package com.task_pay.task_pay.utils.response;
+package com.task_pay.task_pay.payloads.response;
 
 import com.task_pay.task_pay.models.dtos.UserDto;
 import lombok.*;

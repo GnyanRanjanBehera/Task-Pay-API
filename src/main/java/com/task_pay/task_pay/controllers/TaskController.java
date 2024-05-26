@@ -4,11 +4,9 @@ import com.task_pay.task_pay.models.dtos.*;
 import com.task_pay.task_pay.services.FCMService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.TaskService;
-import com.task_pay.task_pay.utils.request.AssignTaskRequest;
-import com.task_pay.task_pay.utils.request.NotificationRequest;
-import com.task_pay.task_pay.utils.response.PageableResponse;
+import com.task_pay.task_pay.payloads.request.NotificationRequest;
+import com.task_pay.task_pay.payloads.response.PageableResponse;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController

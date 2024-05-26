@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import static com.task_pay.task_pay.models.enums.Permission.*;
 
 
+@Getter
 @RequiredArgsConstructor
 public enum Role {
     // user has no permissions
@@ -36,7 +37,6 @@ public enum Role {
 
 
 
-    @Getter
     private final Set<Permission> permissions;
 
     public List<SimpleGrantedAuthority> getAuthorities() {

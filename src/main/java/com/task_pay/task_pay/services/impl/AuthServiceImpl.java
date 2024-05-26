@@ -10,10 +10,10 @@ import com.task_pay.task_pay.repositories.TokenRepository;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.security.JwtService;
 import com.task_pay.task_pay.services.AuthService;
-import com.task_pay.task_pay.utils.request.AuthenticationRequest;
-import com.task_pay.task_pay.utils.request.SendOtpRequest;
-import com.task_pay.task_pay.utils.response.ApiMessageResponse;
-import com.task_pay.task_pay.utils.response.AuthenticationResponse;
+import com.task_pay.task_pay.payloads.request.AuthenticationRequest;
+import com.task_pay.task_pay.payloads.request.SendOtpRequest;
+import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.response.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -98,6 +98,7 @@ public class AuthServiceImpl implements AuthService {
         String invitationCode = generateInvitationCode();
      User user=User.builder()
                 .userType(UserType.BUYER)
+                .role(userDto.getRole())
                 .name(userDto.getName())
                 .profilePic(userDto.getProfilePic())
                 .email(userDto.getEmail())

@@ -2,9 +2,9 @@ package com.task_pay.task_pay.services;
 
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.enums.UserType;
-import com.task_pay.task_pay.utils.response.ApiMessageResponse;
-import com.task_pay.task_pay.utils.response.AuthenticationResponse;
-import com.task_pay.task_pay.utils.response.PageableResponse;
+import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.response.AuthenticationResponse;
+import com.task_pay.task_pay.payloads.response.PageableResponse;
 
 public interface UserService {
 
@@ -17,4 +17,7 @@ public interface UserService {
     PageableResponse<UserDto> fetchUsers(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     void deleteUser(Integer userId);
+
+
+
 }

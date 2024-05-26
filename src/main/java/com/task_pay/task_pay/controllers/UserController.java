@@ -1,12 +1,13 @@
 package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.enums.UserType;
+import com.task_pay.task_pay.services.AuthService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.UserService;
-import com.task_pay.task_pay.utils.response.ApiMessageResponse;
-import com.task_pay.task_pay.utils.response.AuthenticationResponse;
-import com.task_pay.task_pay.utils.response.ImageResponse;
-import com.task_pay.task_pay.utils.response.PageableResponse;
+import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.response.AuthenticationResponse;
+import com.task_pay.task_pay.payloads.response.ImageResponse;
+import com.task_pay.task_pay.payloads.response.PageableResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,10 @@ import java.io.InputStream;
 public class UserController {
     @Autowired
     private UserService userService;
+
+
+    @Autowired
+    private AuthService authService;
 
 
     @Autowired
@@ -124,5 +129,22 @@ public class UserController {
         InputStream resource = fileService.getResource(userImagePath, user.getProfilePic());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());
+    }
+
+
+    @PutMapping("/blockUser/{userId}")
+    public ResponseEntity<ApiMessageResponse> blockUser(@Valid @PathVariable("userId") Integer userId){
+        authService.blockUser(userId);
+        ApiMessageResponse response = ApiMessageResponse.builder().
+                message("Block user successfully !").status(HttpStatus.OK).success(true).build();
+        return  new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PutMapping("/unBlockUser/{userId}")
+    public ResponseEntity<ApiMessageResponse> unBlockUser(@Valid @PathVariable("userId") Integer userId){
+        authService.unBlockUser(userId);
+        ApiMessageResponse response = ApiMessageResponse.builder().
+                message("Unblock user successfully !").status(HttpStatus.OK).success(true).build();
+        return  new ResponseEntity<>(response,HttpStatus.OK);
     }
 }
