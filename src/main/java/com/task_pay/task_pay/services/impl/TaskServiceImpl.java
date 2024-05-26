@@ -19,7 +19,7 @@ import com.task_pay.task_pay.services.FCMService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.TaskService;
 import com.task_pay.task_pay.utils.Helper;
-import com.task_pay.task_pay.utils.response.PageableResponse;
+import com.task_pay.task_pay.payloads.response.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,6 +16,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+import static com.task_pay.task_pay.models.enums.Permission.*;
+import static com.task_pay.task_pay.models.enums.Role.*;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -59,6 +62,40 @@ public class SecurityConfig {
                                 // no restrictions
                                 .requestMatchers(PUBLIC_URLS)
                                 .permitAll()
+                                // Admin endpoint: only admin can access
+                                .requestMatchers("/api/user/**").hasRole(ADMIN.name())
+                                .requestMatchers(GET, "/api/user/**").hasAuthority(ADMIN_READ.name())
+                                .requestMatchers(POST, "/api/user/**").hasAuthority(ADMIN_CREATE.name())
+                                .requestMatchers(PUT, "/api/user/**").hasAuthority(ADMIN_UPDATE.name())
+                                .requestMatchers(DELETE, "/api/user/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/invite/**").hasRole(ADMIN.name())
+                                .requestMatchers(GET,"api/invite/**").hasAuthority(ADMIN_READ.name())
+                                .requestMatchers(POST,"api/invite/**").hasAuthority(ADMIN_CREATE.name())
+                                .requestMatchers(PUT,"api/invite/**").hasAuthority(ADMIN_UPDATE.name())
+                                .requestMatchers(DELETE,"api/invite/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/task/**").hasRole(ADMIN.name())
+                                .requestMatchers(GET,"api/task/**").hasAuthority(ADMIN_READ.name())
+                                .requestMatchers(POST,"api/task/**").hasAuthority(ADMIN_CREATE.name())
+                                .requestMatchers(PUT,"api/task/**").hasAuthority(ADMIN_UPDATE.name())
+                                .requestMatchers(DELETE,"api/task/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/payment/**").hasRole(ADMIN.name())
+                                .requestMatchers(GET,"api/payment/**").hasAuthority(ADMIN_READ.name())
+                                .requestMatchers(POST,"api/payment/**").hasAuthority(ADMIN_CREATE.name())
+                                .requestMatchers(PUT,"api/payment/**").hasAuthority(ADMIN_UPDATE.name())
+                                .requestMatchers(DELETE,"api/payment/**").hasAuthority(ADMIN_DELETE.name())
+
+                                //Banker end point:only banker can access
+                                .requestMatchers("/api/user/**").hasRole(BANKER.name())
+                                .requestMatchers(GET, "/api/user/**").hasAuthority(BANKER_READ.name())
+                                .requestMatchers("/api/invite/**").hasRole(BANKER.name())
+                                .requestMatchers(GET,"api/invite/**").hasAuthority(BANKER_READ.name())
+                                .requestMatchers("/api/task/**").hasRole(BANKER.name())
+                                .requestMatchers(GET,"api/task/**").hasAuthority(BANKER_READ.name())
+                                .requestMatchers("/api/payment/**").hasRole(BANKER.name())
+                                .requestMatchers(GET,"api/payment/**").hasAuthority(BANKER_READ.name())
+
+                                //User end point:only user can access
+
                                 .anyRequest()
                                 .authenticated()
                 )

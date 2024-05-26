@@ -6,9 +6,9 @@ import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.services.UserService;
 import com.task_pay.task_pay.utils.Helper;
-import com.task_pay.task_pay.utils.response.ApiMessageResponse;
-import com.task_pay.task_pay.utils.response.AuthenticationResponse;
-import com.task_pay.task_pay.utils.response.PageableResponse;
+import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.response.AuthenticationResponse;
+import com.task_pay.task_pay.payloads.response.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -106,6 +106,8 @@ public class UserServiceImpl implements UserService {
         if(user!=null){
             userRepository.delete(user);
         }
-
     }
+
+
+
 }

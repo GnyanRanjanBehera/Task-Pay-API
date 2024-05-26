@@ -1,5 +1,5 @@
 package com.task_pay.task_pay.controllers;
-import com.task_pay.task_pay.utils.response.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
