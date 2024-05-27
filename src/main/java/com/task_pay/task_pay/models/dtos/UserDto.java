@@ -32,7 +32,7 @@ public class UserDto {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role=Role.USER;
 
     @NotBlank(message = "password is blank")
     private String password;

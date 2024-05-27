@@ -4,6 +4,7 @@ import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.Token;
 import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.enums.Role;
 import com.task_pay.task_pay.models.enums.TokenType;
 import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.TokenRepository;
@@ -27,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 
@@ -96,7 +98,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthenticationResponse verifyOTP(UserDto userDto,String OTP) {
         String invitationCode = generateInvitationCode();
-     User user=User.builder()
+
+        User user=User.builder()
                 .userType(UserType.BUYER)
                 .role(userDto.getRole())
                 .name(userDto.getName())

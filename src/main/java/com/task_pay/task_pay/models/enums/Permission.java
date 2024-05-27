@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.models.enums;
 import lombok.*;
 
+@Getter
 @RequiredArgsConstructor
 public enum Permission {
 
@@ -12,8 +13,7 @@ public enum Permission {
     ADMIN_UPDATE("admin:update"),
     ADMIN_CREATE("admin:create"),
     ADMIN_DELETE("admin:delete"),
-    BANKER_READ("management:read");
+    BANKER_READ("banker:read");
 
-    @Getter
     private final String permission;
 }
