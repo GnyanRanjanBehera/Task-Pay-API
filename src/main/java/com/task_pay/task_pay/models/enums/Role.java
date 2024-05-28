@@ -19,6 +19,7 @@ public enum Role {
                     USER_CREATE
             )
     ),
+
     // admin has all permissions
     ADMIN(
             Set.of(
