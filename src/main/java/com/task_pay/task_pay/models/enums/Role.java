@@ -10,7 +10,7 @@ import static com.task_pay.task_pay.models.enums.Permission.*;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-    // user has no permissions
+    // user has all permissions
     USER(
             Set.of(
                     USER_READ,
@@ -19,6 +19,7 @@ public enum Role {
                     USER_CREATE
             )
     ),
+
     // admin has all permissions
     ADMIN(
             Set.of(
