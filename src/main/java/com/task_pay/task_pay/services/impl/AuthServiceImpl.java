@@ -121,7 +121,7 @@ public class AuthServiceImpl implements AuthService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
-                .userDto(mapper.map(user,UserDto.class))
+                .user(mapper.map(user,UserDto.class))
                 .build();
     }
 
@@ -143,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
-                .userDto(mapper.map(user,UserDto.class))
+                .user(mapper.map(user,UserDto.class))
                 .build();
     }
 

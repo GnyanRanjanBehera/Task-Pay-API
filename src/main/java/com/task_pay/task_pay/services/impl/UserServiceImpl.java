@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
                 orElseThrow(() -> new ResourceNotFoundException("User not found with given userId !"));
         user.setProfilePic(userDto.getProfilePic());
         User saveUser = userRepository.save(user);
-        return AuthenticationResponse.builder().userDto(mapper.map(saveUser,UserDto.class)).build();
+        return AuthenticationResponse.builder().user(mapper.map(saveUser,UserDto.class)).build();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         user.setUserType(userType);
         User saveUser = userRepository.save(user);
         return AuthenticationResponse.builder()
-                .userDto(mapper.map(saveUser,UserDto.class))
+                .user(mapper.map(saveUser,UserDto.class))
                 .build();
     }
 

@@ -14,7 +14,7 @@
 	<name>task_pay</name>
 	<description>This project used for payment</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>18</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -92,6 +92,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
+		<dependency>
+			<artifactId>guava</artifactId>
+			<groupId>com.google.guava</groupId>
+			<version>31.0.1-jre</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.firebase</groupId>
@@ -104,6 +109,8 @@
 			<artifactId>pg-sdk-java</artifactId>
 			<version>1.1.0</version>
 		</dependency>
+
+
 
 	</dependencies>
 	<repositories>

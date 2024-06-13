@@ -65,8 +65,8 @@ public class SecurityConfig {
                                 .requestMatchers(PUBLIC_URLS)
                                 .permitAll()
                                 // Admin endpoint: only admin can access
-                                .requestMatchers("/api/user/**").hasAnyRole(ADMIN.name(),BANKER.name())
-                                .requestMatchers(GET, "/api/user/**").hasAnyAuthority(ADMIN_READ.name(),BANKER_READ.name())
+                                .requestMatchers("/api/user/**").hasAnyRole(ADMIN.name())
+                                .requestMatchers(GET, "/api/user/**").hasAnyAuthority(ADMIN_READ.name())
                                 .requestMatchers(POST, "/api/user/**").hasAuthority(ADMIN_CREATE.name())
                                 .requestMatchers(PUT, "/api/user/**").hasAuthority(ADMIN_UPDATE.name())
                                 .requestMatchers(DELETE, "/api/user/**").hasAuthority(ADMIN_DELETE.name())
@@ -77,11 +77,15 @@ public class SecurityConfig {
                                 .requestMatchers(POST,"/api/invite/**").hasAuthority(ADMIN_CREATE.name())
                                 .requestMatchers(PUT,"/api/invite/**").hasAuthority(ADMIN_UPDATE.name())
                                 .requestMatchers(DELETE,"/api/invite/**").hasAuthority(ADMIN_DELETE.name())
+
+
                                 .requestMatchers("/api/task/**").hasRole(ADMIN.name())
                                 .requestMatchers(GET,"/api/task/**").hasAuthority(ADMIN_READ.name())
                                 .requestMatchers(POST,"/api/task/**").hasAuthority(ADMIN_CREATE.name())
                                 .requestMatchers(PUT,"/api/task/**").hasAuthority(ADMIN_UPDATE.name())
                                 .requestMatchers(DELETE,"/api/task/**").hasAuthority(ADMIN_DELETE.name())
+
+
                                 .requestMatchers("/api/payment/**").hasRole(ADMIN.name())
                                 .requestMatchers(GET,"/api/payment/**").hasAuthority(ADMIN_READ.name())
                                 .requestMatchers(POST,"/api/payment/**").hasAuthority(ADMIN_CREATE.name())
@@ -89,14 +93,17 @@ public class SecurityConfig {
                                 .requestMatchers(DELETE,"/api/payment/**").hasAuthority(ADMIN_DELETE.name())
 
                                 //Banker end point:only banker can access
-//                                .requestMatchers("/api/user/**").hasRole(BANKER.name())
-//                                .requestMatchers(GET, "/api/user/**").hasAuthority(BANKER_READ.name())
-//                                .requestMatchers("/api/invite/**").hasRole(BANKER.name())
-//                                .requestMatchers(GET,"/api/invite/**").hasAuthority(BANKER_READ.name())
-//                                .requestMatchers("/api/task/**").hasRole(BANKER.name())
-//                                .requestMatchers(GET,"/api/task/**").hasAuthority(BANKER_READ.name())
-//                                .requestMatchers("/api/payment/**").hasRole(BANKER.name())
-//                                .requestMatchers(GET,"/api/payment/**").hasAuthority(BANKER_READ.name())
+                                .requestMatchers("/api/banker/**").hasRole(BANKER.name())
+                                .requestMatchers(GET, "/api/banker/**").hasAuthority(BANKER_READ.name())
+
+
+                                .requestMatchers("/api/banker/**").hasRole(BANKER.name())
+                                .requestMatchers(GET,"/api/banker/**").hasAuthority(BANKER_READ.name())
+
+
+                                .requestMatchers("/api/banker/**").hasRole(BANKER.name())
+                                .requestMatchers(GET,"/api/banker/**").hasAuthority(BANKER_READ.name())
+
 
                                 //User end point:only user can access
 //                                .requestMatchers("/api/user/**").hasRole(USER.name())

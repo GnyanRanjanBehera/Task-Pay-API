@@ -27,12 +27,16 @@ public enum Role {
                     ADMIN_UPDATE,
                     ADMIN_DELETE,
                     ADMIN_CREATE
+
             )
     ),
 //    Banker has only read permission
     BANKER(
             Set.of(
-                    BANKER_READ
+                    BANKER_READ,
+                    BANKER_UPDATE,
+                    BANKER_DELETE,
+                    BANKER_CREATE
             )
     );
 
