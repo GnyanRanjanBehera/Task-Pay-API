@@ -106,6 +106,9 @@ public class TaskServiceImpl implements TaskService {
                 taskFiles.add(taskFile);
             }
             saveTask.setTaskFiles(taskFiles);
+        }else{
+            List<TaskFile> taskFiles = new ArrayList<>();
+            saveTask.setTaskFiles(taskFiles);
         }
         if(mileStoneDtos!=null) {
             List<MileStone> milestones = new ArrayList<>();
@@ -126,6 +129,10 @@ public class TaskServiceImpl implements TaskService {
                 milestones.add(mileStone);
             }
             saveTask.setMileStones(milestones);
+        }else{
+            List<MileStone> milestones = new ArrayList<>();
+            saveTask.setMileStones(milestones);
+
         }
         Task save = taskRepository.save(saveTask);
         return mapper.map(save,TaskDto.class);
