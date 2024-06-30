@@ -42,6 +42,7 @@ public class InviteServiceImpl implements InviteService {
         Integer userId = inviteUserRequest.getUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId"));
+
         if(mobileNumber==null && invitationCode!=null && user!=null){
             User invitedUser = userRepository.findByInvitationCode(invitationCode).orElseThrow(() -> new ResourceNotFoundException("Invitation code does not exist !"));
             Optional<Invite> checkInvitedUser = inviteRepository.findByInvitedUserId(invitedUser.getUserId());
