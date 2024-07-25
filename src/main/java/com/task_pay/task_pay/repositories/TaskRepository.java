@@ -11,10 +11,10 @@ import java.util.Objects;
 
 public interface TaskRepository extends JpaRepository<Task,Integer> {
 
-    @Query("SELECT t FROM Task t WHERE (t.senderUser.userId = :userId AND t.senderUserType = 'Buyer')")
+    @Query("SELECT t FROM Task t WHERE (t.senderUser.userId = :userId AND t.senderUserType = 'BUYER')")
     Page<Objects[]> findBuyerTasks(Integer userId, Pageable pageable);
 
 
-    @Query("SELECT t FROM Task t WHERE (t.receiverUser.userId = :userId AND t.receiverUserType = 'Seller')")
+    @Query("SELECT t FROM Task t WHERE (t.receiverUser.userId = :userId AND t.receiverUserType = 'SELLER')")
     Page<Objects[]> findSellerTasks(Integer userId, Pageable pageable);
 }

@@ -55,6 +55,7 @@ public class TaskController {
             jsonMilestone = taskService.getJson(mileStones);
         }
         System.out.println("print the filess======"+files);
+
         System.out.println("print the mile======"+mileStones);
         TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,files,jsonMilestone);
         NotificationRequest notificationRequest = NotificationRequest
