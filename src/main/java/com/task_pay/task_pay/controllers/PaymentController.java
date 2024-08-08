@@ -1,10 +1,13 @@
 package com.task_pay.task_pay.controllers;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
+import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @Validated
@@ -23,12 +26,15 @@ public class PaymentController {
     }
 
     @PostMapping("/releasePayment")
-    public ResponseEntity<ApiMessageResponse> releasePayment(){
+    @ResponseBody
+    public ResponseEntity<ApiMessageResponse> releasePayment(@RequestBody Map<String,Object> data) throws RazorpayException {
+
         return null;
     }
 
     @PostMapping("/blockMilestonePayment")
-    public ResponseEntity<ApiMessageResponse> blockMilestonePayment(){
+    public ResponseEntity<ApiMessageResponse> blockMilestonePayment() throws RazorpayException {
+
         return null;
     }
 
