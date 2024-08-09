@@ -1,6 +1,6 @@
 package com.task_pay.task_pay.utils;
 import com.task_pay.task_pay.models.enums.DateFormatPattern;
-import com.task_pay.task_pay.payloads.response.PageableResponse;
+import com.task_pay.task_pay.payloads.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 

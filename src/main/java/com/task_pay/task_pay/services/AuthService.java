@@ -1,9 +1,9 @@
 package com.task_pay.task_pay.services;
 import com.task_pay.task_pay.models.dtos.UserDto;
-import com.task_pay.task_pay.payloads.request.AuthenticationRequest;
-import com.task_pay.task_pay.payloads.request.SendOtpRequest;
-import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
-import com.task_pay.task_pay.payloads.response.AuthenticationResponse;
+import com.task_pay.task_pay.payloads.AuthenticationRequest;
+import com.task_pay.task_pay.payloads.SendOtpRequest;
+import com.task_pay.task_pay.payloads.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -2,9 +2,9 @@ package com.task_pay.task_pay.services;
 
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.enums.UserType;
-import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
-import com.task_pay.task_pay.payloads.response.AuthenticationResponse;
-import com.task_pay.task_pay.payloads.response.PageableResponse;
+import com.task_pay.task_pay.payloads.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.AuthenticationResponse;
+import com.task_pay.task_pay.payloads.PageableResponse;
 
 public interface UserService {
 

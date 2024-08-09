@@ -1,6 +1,6 @@
 package com.task_pay.task_pay.services;
 
-import com.task_pay.task_pay.payloads.request.NotificationRequest;
+import com.task_pay.task_pay.payloads.NotificationRequest;
 
 import java.util.concurrent.ExecutionException;
 

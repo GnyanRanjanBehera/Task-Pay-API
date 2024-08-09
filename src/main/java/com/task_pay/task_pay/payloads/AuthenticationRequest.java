@@ -1,4 +1,4 @@
-package com.task_pay.task_pay.payloads.request;
+package com.task_pay.task_pay.payloads;
 
 import lombok.*;
 

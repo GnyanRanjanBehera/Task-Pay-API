@@ -1,7 +1,7 @@
 package com.task_pay.task_pay.services;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
-import com.task_pay.task_pay.payloads.response.PageableResponse;
+import com.task_pay.task_pay.payloads.PageableResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

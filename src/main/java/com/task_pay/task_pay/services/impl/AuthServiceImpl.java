@@ -4,17 +4,16 @@ import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.Token;
 import com.task_pay.task_pay.models.entities.User;
-import com.task_pay.task_pay.models.enums.Role;
 import com.task_pay.task_pay.models.enums.TokenType;
 import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.TokenRepository;
 import com.task_pay.task_pay.repositories.UserRepository;
 import com.task_pay.task_pay.security.JwtService;
 import com.task_pay.task_pay.services.AuthService;
-import com.task_pay.task_pay.payloads.request.AuthenticationRequest;
-import com.task_pay.task_pay.payloads.request.SendOtpRequest;
-import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
-import com.task_pay.task_pay.payloads.response.AuthenticationResponse;
+import com.task_pay.task_pay.payloads.AuthenticationRequest;
+import com.task_pay.task_pay.payloads.SendOtpRequest;
+import com.task_pay.task_pay.payloads.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -28,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.*;
 
 

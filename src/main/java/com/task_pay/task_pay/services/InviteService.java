@@ -1,8 +1,8 @@
 package com.task_pay.task_pay.services;
 
 import com.task_pay.task_pay.models.dtos.InviteDto;
-import com.task_pay.task_pay.payloads.request.InviteUserRequest;
-import com.task_pay.task_pay.payloads.response.PageableResponse;
+import com.task_pay.task_pay.payloads.InviteUserRequest;
+import com.task_pay.task_pay.payloads.PageableResponse;
 
 public interface InviteService {
 

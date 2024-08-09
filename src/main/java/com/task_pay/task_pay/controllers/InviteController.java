@@ -3,9 +3,9 @@ package com.task_pay.task_pay.controllers;
 
 import com.task_pay.task_pay.models.dtos.InviteDto;
 import com.task_pay.task_pay.services.InviteService;
-import com.task_pay.task_pay.payloads.request.InviteUserRequest;
-import com.task_pay.task_pay.payloads.response.ApiMessageResponse;
-import com.task_pay.task_pay.payloads.response.PageableResponse;
+import com.task_pay.task_pay.payloads.InviteUserRequest;
+import com.task_pay.task_pay.payloads.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.PageableResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

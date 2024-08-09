@@ -4,7 +4,7 @@ import com.task_pay.task_pay.models.dtos.InviteDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
 import com.task_pay.task_pay.models.dtos.TaskFileDto;
 import com.task_pay.task_pay.models.dtos.UserDto;
-import com.task_pay.task_pay.payloads.response.PageableResponse;
+import com.task_pay.task_pay.payloads.PageableResponse;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.InviteService;
 import com.task_pay.task_pay.services.TaskService;

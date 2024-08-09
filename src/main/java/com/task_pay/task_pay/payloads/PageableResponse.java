@@ -1,4 +1,4 @@
-package com.task_pay.task_pay.payloads.response;
+package com.task_pay.task_pay.payloads;
 
 import lombok.*;
 import java.util.List;

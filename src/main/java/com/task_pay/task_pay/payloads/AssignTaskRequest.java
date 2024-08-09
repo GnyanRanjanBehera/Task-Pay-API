@@ -1,4 +1,4 @@
-package com.task_pay.task_pay.payloads.request;
+package com.task_pay.task_pay.payloads;
 
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskFileDto;

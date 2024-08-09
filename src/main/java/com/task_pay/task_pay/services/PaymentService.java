@@ -1,15 +1,13 @@
 package com.task_pay.task_pay.services;
 
 import com.razorpay.RazorpayException;
-import com.task_pay.task_pay.payloads.request.PaymentRequest;
-import com.task_pay.task_pay.payloads.request.PaymentVerifyRequest;
-import com.task_pay.task_pay.payloads.response.PaymentResponse;
+import com.task_pay.task_pay.payloads.CheckOutOption;
 
 public interface PaymentService {
 
-    PaymentResponse releasePayment(PaymentRequest paymentRequest) throws RazorpayException;
+    CheckOutOption releasePayment(Integer taskId,Integer senderUserId,Integer receiverUserId) throws RazorpayException;
 
-    void releaseVerifyPayment(PaymentVerifyRequest paymentVerifyRequest);
+    void releaseVerifyPayment(String paymentId,String orderId,String signature);
 
 
 }
