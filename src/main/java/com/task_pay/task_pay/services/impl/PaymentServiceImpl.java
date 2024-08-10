@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -34,34 +36,40 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public CheckOutOption releasePayment(Integer taskId,Integer senderUserId,Integer receiverUserId) throws RazorpayException {
-
+    public CheckOutOption blockPayment(Integer taskId, Integer senderUserId, Integer receiverUserId)
+            throws RazorpayException {
         User senderUser = userRepository.findById(senderUserId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
         User receiverUser = userRepository.findById(receiverUserId).orElseThrow(
                 () -> new ResourceNotFoundException("Seller not found with this id !"));
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task not found with this id !"));
-        Prefill prefillResponse=new Prefill();
-        prefillResponse.setContact(senderUser.getMobileNumber());
-        prefillResponse.setEmail(senderUser.getEmail());
+        Prefill prefill=new Prefill();
+        prefill.setName(senderUser.getName());
+        prefill.setContact(senderUser.getMobileNumber());
+        prefill.setEmail(senderUser.getEmail());
 
         RazorpayClient razorpayClient = new RazorpayClient(key, secret);
         JSONObject orderRequest = new JSONObject();
         orderRequest.put("amount",task.getTaskPrice()*1000);
         orderRequest.put("currency","INR");
         Order order = razorpayClient.orders.create(orderRequest);
+        System.out.println("order====="+order);
+
         CheckOutOption checkOutOption=new CheckOutOption();
+        checkOutOption.setName("TaskPay");
+        checkOutOption.setDescription(task.getTaskName());
         checkOutOption.setAmount(order.get("amount"));
         checkOutOption.setKey(key);
         checkOutOption.setOrderId(order.get("id"));
         checkOutOption.setCurrency(order.get("currency"));
-        checkOutOption.setPrefill(prefillResponse);
+        checkOutOption.setCreatedAt(order.get("created_at"));
+        checkOutOption.setPrefill(prefill);
         return checkOutOption;
     }
 
     @Override
-    public void releaseVerifyPayment(String paymentId,String orderId, String signature) {
+    public void verifyBlockPayment(String paymentId, String orderId, String signature) {
 
     }
 }

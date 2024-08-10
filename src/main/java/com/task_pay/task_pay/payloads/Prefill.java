@@ -6,6 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Prefill {
+
+    private String name;
     private  String contact;
     private String email;
 }

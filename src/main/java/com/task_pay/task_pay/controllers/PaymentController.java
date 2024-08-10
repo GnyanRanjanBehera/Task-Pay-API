@@ -20,7 +20,18 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/blockPayment")
-    public ResponseEntity<ApiMessageResponse> blockPayment(){
+    public ResponseEntity<CheckOutOption> blockPayment(
+            @RequestParam(value = "senderUserId") Integer senderUserId,
+            @RequestParam(value = "receiverUserId") Integer receiverUserId,
+            @RequestParam(value = "taskId") Integer taskId
+    ) throws RazorpayException {
+        CheckOutOption checkOutOption = paymentService.blockPayment(taskId,senderUserId,receiverUserId);
+        System.out.println(checkOutOption.getClass());
+        return new ResponseEntity<>(checkOutOption, HttpStatus.OK);
+    }
+
+    @PostMapping("/verifyBlockPayment")
+    public ResponseEntity<ApiMessageResponse> verifyBlockPayment(){
         return null;
     }
 
@@ -31,13 +42,8 @@ public class PaymentController {
     }
 
     @PostMapping("/releasePayment")
-    public ResponseEntity<CheckOutOption> releasePayment(
-            @RequestParam(value = "senderUserId") Integer senderUserId,
-            @RequestParam(value = "receiverUserId") Integer receiverUserId,
-            @RequestParam(value = "taskId") Integer taskId
-    ) throws RazorpayException {
-        CheckOutOption paymentResponse = paymentService.releasePayment(taskId,senderUserId,receiverUserId);
-        return new ResponseEntity<>(paymentResponse, HttpStatus.OK);
+    public ResponseEntity<CheckOutOption> releasePayment() {
+        return null;
     }
 
     @PostMapping("/blockMilestonePayment")

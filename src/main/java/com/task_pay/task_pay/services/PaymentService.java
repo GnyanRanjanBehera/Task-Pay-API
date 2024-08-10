@@ -5,9 +5,8 @@ import com.task_pay.task_pay.payloads.CheckOutOption;
 
 public interface PaymentService {
 
-    CheckOutOption releasePayment(Integer taskId,Integer senderUserId,Integer receiverUserId) throws RazorpayException;
+    CheckOutOption blockPayment(Integer taskId,Integer senderUserId,Integer receiverUserId) throws RazorpayException;
 
-    void releaseVerifyPayment(String paymentId,String orderId,String signature);
-
+    void verifyBlockPayment(String paymentId,String orderId,String signature);
 
 }
