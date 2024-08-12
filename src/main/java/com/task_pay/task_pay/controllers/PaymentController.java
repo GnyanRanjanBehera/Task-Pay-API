@@ -31,8 +31,14 @@ public class PaymentController {
     }
 
     @PostMapping("/verifyBlockPayment")
-    public ResponseEntity<ApiMessageResponse> verifyBlockPayment(){
-        return null;
+    public ResponseEntity<ApiMessageResponse> verifyBlockPayment(
+            @RequestParam(value = "orderId") String orderId,
+            @RequestParam(value = "paymentId") String paymentId,
+            @RequestParam(value = "signature") String signature
+    ) throws RazorpayException {
+        paymentService.verifyBlockPayment(orderId,paymentId,signature);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("Payment verify successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
 
 

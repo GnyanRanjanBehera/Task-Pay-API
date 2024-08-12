@@ -7,6 +7,6 @@ public interface PaymentService {
 
     CheckOutOption blockPayment(Integer taskId,Integer senderUserId,Integer receiverUserId) throws RazorpayException;
 
-    void verifyBlockPayment(String paymentId,String orderId,String signature);
+    void verifyBlockPayment(String paymentId,String orderId,String signature) throws RazorpayException;
 
 }

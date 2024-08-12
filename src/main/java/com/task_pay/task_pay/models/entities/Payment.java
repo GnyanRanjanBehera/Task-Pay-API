@@ -13,27 +13,32 @@ import java.util.Date;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer paymentId;
+    private Integer payId;
+
+    @Column(nullable = false)
+    private String orderId;
+
+    private String paymentId;
+
+    private Date createdAt;
+
+    private String receipt;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
+    private PaymentStatus status;
+
+    private String method;
 
     @Column(nullable = false)
-    private String paymentMethod;
+    private double amount;
 
     @Column(nullable = false)
-    private double paymentAmount;
+    private Date blockedAt;
 
-    @Column(nullable = false)
-    private double paymentTax;
+    private Date releasedRequestAt;
 
-    @Column(nullable = false)
-    private Date paymentBlockAt;
-
-    private Date paymentReleasedRequestAt;
-
-    private Date paymentReleasedAt;
+    private Date releasedAt;
 
     @ManyToOne
     @JoinColumn(name = "senderUserId")
