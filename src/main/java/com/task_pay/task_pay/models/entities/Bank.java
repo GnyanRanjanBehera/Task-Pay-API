@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
+@Setter
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

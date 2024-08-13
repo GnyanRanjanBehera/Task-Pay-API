@@ -22,6 +22,7 @@ public class Payment {
 
     private Date createdAt;
 
+    @Column(nullable = false,unique = true)
     private String receipt;
 
     @Column(nullable = false)

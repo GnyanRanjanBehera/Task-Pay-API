@@ -20,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Service
@@ -64,6 +66,7 @@ public class PaymentServiceImpl implements PaymentService {
         JSONObject orderRequest = new JSONObject();
         orderRequest.put("amount",task.getTaskPrice()*1000);
         orderRequest.put("currency",Constant.INR.name());
+        orderRequest.put("receipt",generateReceiptNumber());
         Order order = razorpayClient.orders.create(orderRequest);
         CheckOutOption checkOutOption=new CheckOutOption();
         checkOutOption.setName(Constant.TaskPay.name());
@@ -88,6 +91,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setAmount(checkOutOption.getAmount());
             payment.setCreatedAt(checkOutOption.getCreatedAt());
             payment.setStatus(PaymentStatus.CREATED);
+            payment.setReceipt(order.get("receipt"));
             payment.setTask(task);
             payment.setSenderUser(senderUser);
             payment.setReceiverUser(receiverUser);
@@ -114,5 +118,13 @@ public class PaymentServiceImpl implements PaymentService {
             paymentRepository.save(payment);
         }
 
+    }
+
+    public static String generateReceiptNumber() {
+        final AtomicInteger sequenceNumber = new AtomicInteger(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String dateStr = sdf.format(new Date());
+        int sequence = sequenceNumber.incrementAndGet();
+        return String.format("%s-%03d", dateStr, sequence);
     }
 }
