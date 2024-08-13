@@ -1,6 +1,4 @@
 package com.task_pay.task_pay.services.impl;
-
-import com.google.api.client.util.DateTime;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -9,6 +7,7 @@ import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.entities.Payment;
 import com.task_pay.task_pay.models.entities.Task;
 import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.enums.Constant;
 import com.task_pay.task_pay.models.enums.PaymentStatus;
 import com.task_pay.task_pay.payloads.CheckOutOption;
 import com.task_pay.task_pay.payloads.Prefill;
@@ -64,10 +63,10 @@ public class PaymentServiceImpl implements PaymentService {
         RazorpayClient razorpayClient = new RazorpayClient(key, secret);
         JSONObject orderRequest = new JSONObject();
         orderRequest.put("amount",task.getTaskPrice()*1000);
-        orderRequest.put("currency","INR");
+        orderRequest.put("currency",Constant.INR.name());
         Order order = razorpayClient.orders.create(orderRequest);
         CheckOutOption checkOutOption=new CheckOutOption();
-        checkOutOption.setName("TaskPay");
+        checkOutOption.setName(Constant.TaskPay.name());
         checkOutOption.setDescription(task.getTaskName());
         checkOutOption.setAmount(order.get("amount"));
         checkOutOption.setKey(key);

@@ -66,6 +66,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
     private List<Token> tokens=new ArrayList<>();
 
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
+    private Bank bank;
+
     @OneToMany(mappedBy = "inviteUser",cascade = CascadeType.ALL,orphanRemoval=true)
     private List<Invite> inviteUsers=new ArrayList<>();
 
