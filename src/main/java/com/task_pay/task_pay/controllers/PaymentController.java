@@ -19,6 +19,7 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
+
     @PostMapping("/blockPayment")
     public ResponseEntity<CheckOutOption> blockPayment(
             @RequestParam(value = "senderUserId") Integer senderUserId,
@@ -36,35 +37,35 @@ public class PaymentController {
             @RequestParam(value = "paymentId") String paymentId,
             @RequestParam(value = "signature") String signature
     ) throws RazorpayException {
-        paymentService.verifyBlockPayment(orderId,paymentId,signature);
+        paymentService.verifyBlockPayment(paymentId,orderId,signature);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("Payment verify successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
+    }
+
+    @PostMapping("/blockMilestonePayment")
+    public ResponseEntity<CheckOutOption> blockMilestonePayment(
+            @RequestParam(value = "senderUserId") Integer senderUserId,
+            @RequestParam(value = "receiverUserId") Integer receiverUserId,
+            @RequestParam(value = "taskId") Integer taskId,
+            @RequestParam(value = "milestoneId") Integer milestoneId
+    ) throws RazorpayException {
+        CheckOutOption checkOutOption = paymentService.blockMilestonePayment(taskId, milestoneId, senderUserId, receiverUserId);
+        return new ResponseEntity<>(checkOutOption,HttpStatus.OK);
+
+    }
+
+    @PostMapping("/verifyBlockMileStonePayment")
+    public ResponseEntity<ApiMessageResponse> verifyBlockMileStonePayment(
+            @RequestParam(value = "orderId") String orderId,
+            @RequestParam(value = "paymentId") String paymentId,
+            @RequestParam(value = "signature") String signature
+    ) throws RazorpayException {
+        paymentService.verifyBlockMilestonePayment(paymentId,orderId,signature);
         ApiMessageResponse successfully = ApiMessageResponse.builder().message("Payment verify successfully").status(HttpStatus.OK).success(true).build();
         return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
 
 
-    @PostMapping("/releasePaymentRequest")
-    public ResponseEntity<ApiMessageResponse> releasePaymentRequest(){
-        return null;
-    }
 
-    @PostMapping("/releasePayment")
-    public ResponseEntity<CheckOutOption> releasePayment() {
-        return null;
-    }
 
-    @PostMapping("/blockMilestonePayment")
-    public ResponseEntity<ApiMessageResponse> blockMilestonePayment() throws RazorpayException {
-
-        return null;
-    }
-
-    @PostMapping("/releaseMilestonePaymentRequest")
-    public ResponseEntity<ApiMessageResponse> releaseMilestonePaymentRequest(){
-        return null;
-    }
-
-    @PostMapping("/releaseMilestonePayment")
-    public ResponseEntity<ApiMessageResponse> releaseMilestonePayment(){
-        return null;
-    }
 }

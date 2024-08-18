@@ -22,7 +22,7 @@ public class Payment {
 
     private Date createdAt;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String receipt;
 
     @Column(nullable = false)
@@ -34,8 +34,10 @@ public class Payment {
     @Column(nullable = false)
     private double amount;
 
-    @Column(nullable = false)
+
     private Date blockedAt;
+
+    private  Date processingAt;
 
     private Date releasedRequestAt;
 

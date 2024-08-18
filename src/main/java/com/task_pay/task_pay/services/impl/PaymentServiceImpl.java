@@ -4,16 +4,12 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
-import com.task_pay.task_pay.models.entities.Payment;
-import com.task_pay.task_pay.models.entities.Task;
-import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.entities.*;
 import com.task_pay.task_pay.models.enums.Constant;
 import com.task_pay.task_pay.models.enums.PaymentStatus;
 import com.task_pay.task_pay.payloads.CheckOutOption;
 import com.task_pay.task_pay.payloads.Prefill;
-import com.task_pay.task_pay.repositories.PaymentRepository;
-import com.task_pay.task_pay.repositories.TaskRepository;
-import com.task_pay.task_pay.repositories.UserRepository;
+import com.task_pay.task_pay.repositories.*;
 import com.task_pay.task_pay.services.PaymentService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +38,13 @@ public class PaymentServiceImpl implements PaymentService {
     private UserRepository userRepository;
 
     @Autowired
+    private MileStoneRepository mileStoneRepository;
+
+    @Autowired
     private PaymentRepository paymentRepository;
+
+    @Autowired
+    private MileStonePaymentRepository mileStonePaymentRepository;
 
 
 
@@ -108,15 +110,122 @@ public class PaymentServiceImpl implements PaymentService {
         options.put("razorpay_payment_id",paymentId);
         options.put("razorpay_signature", signature);
         boolean status =  Utils.verifyPaymentSignature(options, secret);
+
+        Payment  payment = paymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
+        com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
         if(status){
-            Payment payment = paymentRepository.findByOrderId(orderId);
-            com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
             payment.setBlockedAt(new Date());
             payment.setStatus(PaymentStatus.BLOCKED);
-            payment.setPaymentId(paymentId);
-            payment.setMethod(razorPay.get("method"));
-            paymentRepository.save(payment);
+        }else{
+            payment.setProcessingAt(new Date());
+            payment.setStatus(PaymentStatus.PROCESSING);
         }
+        payment.setPaymentId(paymentId);
+        payment.setMethod(razorPay.get("method"));
+        paymentRepository.save(payment);
+
+    }
+
+
+//     if(status){
+//        Payment  payment = paymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
+//        com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
+//        payment.setBlockedAt(new Date());
+//        payment.setStatus(PaymentStatus.BLOCKED);
+//        payment.setPaymentId(paymentId);
+//        payment.setMethod(razorPay.get("method"));
+//        paymentRepository.save(payment);
+//    }else{
+//        Payment  payment = paymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
+//        com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
+//        payment.setProcessingAt(new Date());
+//        payment.setStatus(PaymentStatus.PROCESSING);
+//        payment.setPaymentId(paymentId);
+//        payment.setMethod(razorPay.get("method"));
+//        paymentRepository.save(payment);
+//    }
+
+    @Override
+    public CheckOutOption blockMilestonePayment(Integer taskId, Integer milestoneId, Integer senderUserId, Integer receiverUserId)
+            throws RazorpayException {
+        User senderUser = userRepository.findById(senderUserId).orElseThrow(
+                () -> new ResourceNotFoundException("User not found with this id !"));
+        User receiverUser = userRepository.findById(receiverUserId).orElseThrow(
+                () -> new ResourceNotFoundException("Seller not found with this id !"));
+        Task task = taskRepository.findById(taskId).orElseThrow(
+                () -> new ResourceNotFoundException("Task not found with this id !"));
+        MileStone mileStone = mileStoneRepository.findById(milestoneId).orElseThrow(() -> new ResourceNotFoundException("Milestone not found with id !"));
+
+
+        //        if you want handel logic here if task is status is Accepted
+//        then block payment you can add also add logic here
+        Prefill prefill=new Prefill();
+        prefill.setName(senderUser.getName());
+        prefill.setContact(senderUser.getMobileNumber());
+        prefill.setEmail(senderUser.getEmail());
+
+        RazorpayClient razorpayClient = new RazorpayClient(key, secret);
+        JSONObject orderRequest = new JSONObject();
+        orderRequest.put("amount",mileStone.getMileStonePrice()*1000);
+        orderRequest.put("currency",Constant.INR.name());
+        orderRequest.put("receipt",generateReceiptNumber());
+        Order order = razorpayClient.orders.create(orderRequest);
+
+
+        CheckOutOption checkOutOption=new CheckOutOption();
+        checkOutOption.setName(Constant.TaskPay.name());
+        checkOutOption.setDescription(mileStone.getMileStoneName());
+        checkOutOption.setAmount(order.get("amount"));
+        checkOutOption.setKey(key);
+        checkOutOption.setOrderId(order.get("id"));
+        checkOutOption.setCurrency(order.get("currency"));
+        checkOutOption.setCreatedAt(order.get("created_at"));
+        checkOutOption.setPrefill(prefill);
+        Optional<MileStonePayment> existPayment = mileStonePaymentRepository.findByMileStone_MileStoneId(milestoneId);
+        MileStonePayment mileStonePayment;
+        if(existPayment.isPresent()){
+            mileStonePayment = existPayment.get();
+            mileStonePayment.setOrderId(checkOutOption.getOrderId());
+            mileStonePayment.setAmount(checkOutOption.getAmount());
+            mileStonePayment.setCreatedAt(checkOutOption.getCreatedAt());
+            mileStonePaymentRepository.save(mileStonePayment);
+        }else{
+            mileStonePayment = new MileStonePayment();
+            mileStonePayment.setOrderId(checkOutOption.getOrderId());
+            mileStonePayment.setAmount(checkOutOption.getAmount());
+            mileStonePayment.setCreatedAt(checkOutOption.getCreatedAt());
+            mileStonePayment.setStatus(PaymentStatus.CREATED);
+            mileStonePayment.setReceipt(order.get("receipt"));
+            mileStonePayment.setMileStone(mileStone);
+            mileStonePayment.setSenderUser(senderUser);
+            mileStonePayment.setReceiverUser(receiverUser);
+            mileStonePaymentRepository.save(mileStonePayment);
+        }
+        return checkOutOption;
+    }
+
+    @Override
+    public void verifyBlockMilestonePayment(String paymentId, String orderId, String signature)
+            throws RazorpayException {
+        RazorpayClient razorpayClient = new RazorpayClient(key, secret);
+        JSONObject options = new JSONObject();
+        options.put("razorpay_order_id",orderId);
+        options.put("razorpay_payment_id",paymentId);
+        options.put("razorpay_signature", signature);
+        boolean status =  Utils.verifyPaymentSignature(options, secret);
+
+        MileStonePayment  mileStonePayment = mileStonePaymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
+        com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
+        if(status){
+            mileStonePayment.setBlockedAt(new Date());
+            mileStonePayment.setStatus(PaymentStatus.BLOCKED);
+        }else{
+            mileStonePayment.setProcessingAt(new Date());
+            mileStonePayment.setStatus(PaymentStatus.PROCESSING);
+        }
+        mileStonePayment.setPaymentId(paymentId);
+        mileStonePayment.setMethod(razorPay.get("method"));
+        mileStonePaymentRepository.save(mileStonePayment);
 
     }
 

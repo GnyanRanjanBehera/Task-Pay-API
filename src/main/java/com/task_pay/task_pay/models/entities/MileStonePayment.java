@@ -16,27 +16,35 @@ import java.util.Date;
 public class MileStonePayment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer milestonePaymentId;
+    private Integer mPayId;
+
+    @Column(nullable = false)
+    private String orderId;
+
+    private String paymentId;
+
+    private Date createdAt;
+
+    @Column(nullable = false)
+    private String receipt;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentStatus milestonePaymentStatus;
+    private PaymentStatus status;
+
+    private String method;
 
     @Column(nullable = false)
-    private String milestonePaymentMethod;
+    private double amount;
 
-    @Column(nullable = false)
-    private double milestonePaymentAmount;
 
-    @Column(nullable = false)
-    private double milestonePaymentTax;
+    private Date blockedAt;
 
-    @Column(nullable = false)
-    private Date milestonePaymentBlockAt;
+    private  Date processingAt;
 
-    private Date milestonePaymentReleasedRequestAt;
+    private Date releasedRequestAt;
 
-    private Date milestonePaymentReleasedAt;
+    private Date releasedAt;
 
     @ManyToOne
     @JoinColumn(name = "senderUserId")
@@ -49,4 +57,6 @@ public class MileStonePayment {
     @OneToOne
     @JoinColumn(name = "mileStoneId")
     private MileStone mileStone;
+
+
 }

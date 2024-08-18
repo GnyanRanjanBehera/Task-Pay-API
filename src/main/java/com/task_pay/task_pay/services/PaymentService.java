@@ -9,4 +9,9 @@ public interface PaymentService {
 
     void verifyBlockPayment(String paymentId,String orderId,String signature) throws RazorpayException;
 
+
+    CheckOutOption blockMilestonePayment(Integer taskId, Integer milestoneId,Integer senderUserId,Integer receiverUserId) throws RazorpayException;
+
+    void verifyBlockMilestonePayment(String paymentId,String orderId,String signature) throws RazorpayException;
+
 }

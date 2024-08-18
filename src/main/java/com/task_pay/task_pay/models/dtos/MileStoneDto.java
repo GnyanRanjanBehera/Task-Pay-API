@@ -16,8 +16,8 @@ public class MileStoneDto {
     private Integer id;
     private String mileStoneName;
     private double mileStonePrice;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
     private String startDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
     private String endDate;
 }

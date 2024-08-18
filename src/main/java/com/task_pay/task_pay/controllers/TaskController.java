@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -149,9 +150,9 @@ public class TaskController {
 
 
     @GetMapping("/serveTaskImage/{taskId}/{imgId}")
-    public void serverTaskImage(@PathVariable int taskId,@PathVariable int imgId,HttpServletResponse response) throws IOException {
+    public void serverTaskImage(@PathVariable Integer taskId,@PathVariable Integer imgId,HttpServletResponse response) throws IOException {
         TaskDto taskDto = taskService.fetchTaskById(taskId);
-        TaskFileDto taskFileDto = taskDto.getTaskFiles().stream().filter(file -> file.getFileId() == imgId).findFirst().orElseThrow(() -> new ResourceNotFoundException("file not found with this id"));
+        TaskFileDto taskFileDto = taskDto.getTaskFiles().stream().filter(file -> Objects.equals(file.getFileId(), imgId)).findFirst().orElseThrow(() -> new ResourceNotFoundException("file not found with this id"));
         InputStream resource = fileService.getResource(taskImagePath,taskFileDto.getUrl());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());

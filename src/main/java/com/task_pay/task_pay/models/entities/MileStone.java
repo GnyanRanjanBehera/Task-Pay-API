@@ -16,12 +16,13 @@ public class MileStone {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer mileStoneId;
+
     private String mileStoneName;
+
     private double mileStonePrice;
 
 
     private Date startDate;
-
 
     private Date endDate;
 

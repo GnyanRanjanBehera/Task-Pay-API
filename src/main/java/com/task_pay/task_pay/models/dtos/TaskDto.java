@@ -39,7 +39,7 @@ public class TaskDto {
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
     private Date createdAt;
 
     private UserDto senderUser;
