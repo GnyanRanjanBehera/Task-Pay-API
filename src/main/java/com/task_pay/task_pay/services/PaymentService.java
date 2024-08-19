@@ -14,4 +14,11 @@ public interface PaymentService {
 
     void verifyBlockMilestonePayment(String paymentId,String orderId,String signature) throws RazorpayException;
 
+    void releasedRequestPayment(Integer senderId,Integer receiverId,Integer taskId);
+    void releasedRequestMilestonePayment(Integer senderId,Integer receiverId,Integer taskId,Integer milestoneId);
+
+    void buyerReleasedPayment(Integer senderId,Integer receiverId,Integer taskId);
+
+    void buyerReleasedMilestonePayment(Integer senderId,Integer receiverId,Integer taskId,Integer milestoneId);
+
 }

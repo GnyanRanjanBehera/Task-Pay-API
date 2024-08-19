@@ -65,7 +65,26 @@ public class PaymentController {
         return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
 
+    @PostMapping("/releasedRequestPayment")
+    public ResponseEntity<ApiMessageResponse> releasedRequestPayment(){
+        return null;
+    }
+
+    @PostMapping("/releasedRequestMilestonePayment")
+    public  ResponseEntity<ApiMessageResponse> releasedRequestMilestonePayment(){
+        return null;
+    }
 
 
+
+    @PostMapping("/buyerReleasedPayment")
+    public ResponseEntity<ApiMessageResponse> buyerReleasedPayment(){
+        return null;
+    }
+
+    @PostMapping("/buyerReleasedMilestonePayment")
+    public  ResponseEntity<ApiMessageResponse> buyerReleasedMilestonePayment(){
+        return null;
+    }
 
 }

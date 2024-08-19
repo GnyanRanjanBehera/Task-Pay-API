@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -226,6 +225,29 @@ public class PaymentServiceImpl implements PaymentService {
         mileStonePayment.setPaymentId(paymentId);
         mileStonePayment.setMethod(razorPay.get("method"));
         mileStonePaymentRepository.save(mileStonePayment);
+
+    }
+
+    @Override
+    public void releasedRequestPayment(Integer senderId, Integer receiverId, Integer taskId) {
+        userRepository.findById(senderId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        userRepository.findById(receiverId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with this id !"));
+
+    }
+
+    @Override
+    public void releasedRequestMilestonePayment(Integer senderId, Integer receiverId, Integer taskId, Integer milestoneId) {
+
+    }
+
+    @Override
+    public void buyerReleasedPayment(Integer senderId, Integer receiverId, Integer taskId) {
+
+    }
+
+    @Override
+    public void buyerReleasedMilestonePayment(Integer senderId, Integer receiverId, Integer taskId, Integer milestoneId) {
 
     }
 
