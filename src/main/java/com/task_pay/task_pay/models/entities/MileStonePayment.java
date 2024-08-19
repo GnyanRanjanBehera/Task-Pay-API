@@ -38,13 +38,9 @@ public class MileStonePayment {
     private double amount;
 
 
-    private Date blockedAt;
+    private Date successAt;
 
     private  Date processingAt;
-
-    private Date releasedRequestAt;
-
-    private Date releasedAt;
 
     @ManyToOne
     @JoinColumn(name = "senderUserId")

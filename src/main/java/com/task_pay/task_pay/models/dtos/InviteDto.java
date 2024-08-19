@@ -11,7 +11,7 @@ import java.util.Date;
 @Builder
 public class InviteDto {
     private Integer inviteId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
     private Date invitedAt;
     private UserDto inviteUser;
     private UserDto invitedUser;

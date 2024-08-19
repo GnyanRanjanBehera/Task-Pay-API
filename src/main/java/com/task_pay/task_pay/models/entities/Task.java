@@ -33,7 +33,8 @@ public class Task {
     private TaskStatus taskStatus;
 
     @Column(nullable = false)
-    private String senderUserType;
+    @Enumerated(EnumType.STRING)
+    private UserType senderUserType;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -41,6 +42,16 @@ public class Task {
 
     @Column(nullable = false)
     private Date createdAt;
+
+    private Date blockedAt;
+
+    private Date acceptedAt;
+
+    private Date declinedAt;
+
+    private Date releasedRequestAt;
+
+    private Date releasedAt;
 
     @ManyToOne
     @JoinColumn(name = "senderUserId")

@@ -5,8 +5,7 @@ import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.entities.*;
-import com.task_pay.task_pay.models.enums.Constant;
-import com.task_pay.task_pay.models.enums.PaymentStatus;
+import com.task_pay.task_pay.models.enums.*;
 import com.task_pay.task_pay.payloads.CheckOutOption;
 import com.task_pay.task_pay.payloads.Prefill;
 import com.task_pay.task_pay.repositories.*;
@@ -113,8 +112,11 @@ public class PaymentServiceImpl implements PaymentService {
         Payment  payment = paymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
         com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
         if(status){
-            payment.setBlockedAt(new Date());
-            payment.setStatus(PaymentStatus.BLOCKED);
+            Task task = payment.getTask();
+            task.setTaskStatus(TaskStatus.BLOCKED);
+            task.setBlockedAt(new Date());
+            payment.setSuccessAt(new Date());
+            payment.setStatus(PaymentStatus.SUCCESS);
         }else{
             payment.setProcessingAt(new Date());
             payment.setStatus(PaymentStatus.PROCESSING);
@@ -216,8 +218,11 @@ public class PaymentServiceImpl implements PaymentService {
         MileStonePayment  mileStonePayment = mileStonePaymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
         com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
         if(status){
-            mileStonePayment.setBlockedAt(new Date());
-            mileStonePayment.setStatus(PaymentStatus.BLOCKED);
+            MileStone mileStone = mileStonePayment.getMileStone();
+            mileStone.setMilestoneStatus(MilestoneStatus.BLOCKED);
+            mileStone.setBlockedAt(new Date());
+            mileStonePayment.setSuccessAt(new Date());
+            mileStonePayment.setStatus(PaymentStatus.SUCCESS);
         }else{
             mileStonePayment.setProcessingAt(new Date());
             mileStonePayment.setStatus(PaymentStatus.PROCESSING);
@@ -233,21 +238,47 @@ public class PaymentServiceImpl implements PaymentService {
         userRepository.findById(senderId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
         userRepository.findById(receiverId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with this id !"));
+        if(task.getTaskStatus()== TaskStatus.BLOCKED && task.getReceiverUserType()== UserType.SELLER){
+            task.setTaskStatus(TaskStatus.RELEASEDREQUEST);
+            taskRepository.save(task);
+        }
 
     }
 
     @Override
     public void releasedRequestMilestonePayment(Integer senderId, Integer receiverId, Integer taskId, Integer milestoneId) {
-
+        userRepository.findById(senderId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        userRepository.findById(receiverId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with this id !"));
+        MileStone mileStone = mileStoneRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Milestone not found with this id !"));
+        if(task.getTaskStatus()== TaskStatus.BLOCKED && task.getReceiverUserType()== UserType.SELLER){
+            mileStone.setMilestoneStatus(MilestoneStatus.RELEASEDREQUEST);
+            mileStoneRepository.save(mileStone);
+        }
     }
 
     @Override
     public void buyerReleasedPayment(Integer senderId, Integer receiverId, Integer taskId) {
+        userRepository.findById(senderId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        userRepository.findById(receiverId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with this id !"));
+        if(task.getTaskStatus()==TaskStatus.RELEASEDREQUEST && task.getSenderUserType()==UserType.BUYER){
+            task.setTaskStatus(TaskStatus.RELEASED);
+            taskRepository.save(task);
+        }
 
     }
 
     @Override
     public void buyerReleasedMilestonePayment(Integer senderId, Integer receiverId, Integer taskId, Integer milestoneId) {
+        userRepository.findById(senderId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        userRepository.findById(receiverId).orElseThrow(() -> new ResourceNotFoundException("User not found with this id !"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found with this id !"));
+        MileStone mileStone = mileStoneRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Milestone not found with this id !"));
+        if(mileStone.getMilestoneStatus()==MilestoneStatus.RELEASEDREQUEST && task.getSenderUserType()==UserType.BUYER){
+            mileStone.setMilestoneStatus(MilestoneStatus.RELEASED);
+            mileStoneRepository.save(mileStone);
+        }
 
     }
 

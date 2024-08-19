@@ -9,6 +9,7 @@ import com.task_pay.task_pay.models.entities.MileStone;
 import com.task_pay.task_pay.models.entities.Task;
 import com.task_pay.task_pay.models.entities.TaskFile;
 import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.enums.MilestoneStatus;
 import com.task_pay.task_pay.models.enums.TaskStatus;
 import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.MileStoneRepository;
@@ -113,17 +114,18 @@ public class TaskServiceImpl implements TaskService {
         if(mileStoneDtos!=null) {
             List<MileStone> milestones = new ArrayList<>();
             for (MileStoneDto milestoneDto : mileStoneDtos) {
-//                MileStone milestone = mapper.map(milestoneDto, MileStone.class);
                 MileStone mileStone=new MileStone();
                 mileStone.setMileStoneName(milestoneDto.getMileStoneName());
                 mileStone.setMileStonePrice(milestoneDto.getMileStonePrice());
+                mileStone.setMilestoneStatus(MilestoneStatus.CREATED);
+                mileStone.setCreatedAt(new Date());
                 if(milestoneDto.getStartDate() !=null &&
-                        milestoneDto.getEndDate()!=null &&
-                        !milestoneDto.getEndDate().isEmpty() &&
-                        !milestoneDto.getStartDate().isEmpty()
+                        milestoneDto.getEndDate()!=null
                 ){
-                    mileStone.setStartDate(Helper.convertStringToDate(milestoneDto.getStartDate()));
-                    mileStone.setEndDate(Helper.convertStringToDate(milestoneDto.getEndDate()));
+//                    mileStone.setStartDate(Helper.convertStringToDate(milestoneDto.getStartDate()));
+//                    mileStone.setEndDate(Helper.convertStringToDate(milestoneDto.getEndDate()));
+                        mileStone.setStartDate(milestoneDto.getStartDate());
+                        mileStone.setEndDate(milestoneDto.getEndDate());
                 }
                 mileStone.setTask(saveTask);
                 milestones.add(mileStone);
@@ -173,6 +175,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with this taskId !"));
         task.setTaskStatus(TaskStatus.ACCEPTED);
+        task.setAcceptedAt(new Date());
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
     }
@@ -184,6 +187,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with this taskId !"));
         task.setTaskStatus(TaskStatus.DECLINED);
+        task.setDeclinedAt(new Date());
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
     }

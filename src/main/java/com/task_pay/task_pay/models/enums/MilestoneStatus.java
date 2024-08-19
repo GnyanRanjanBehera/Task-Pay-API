@@ -1,10 +1,9 @@
 package com.task_pay.task_pay.models.enums;
 
-public enum TaskStatus {
+public enum MilestoneStatus {
     CREATED,
-    ACCEPTED,
-    DECLINED,
     BLOCKED,
     RELEASEDREQUEST,
     RELEASED
+
 }
