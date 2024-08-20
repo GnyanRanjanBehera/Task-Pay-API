@@ -52,7 +52,7 @@ public class TaskDto {
     private Date releasedRequestAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
-    private  Date ReleasedAt;
+    private  Date releasedAt;
 
     private UserDto senderUser;
 

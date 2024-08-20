@@ -21,6 +21,7 @@ import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.TaskService;
 import com.task_pay.task_pay.utils.Helper;
 import com.task_pay.task_pay.payloads.PageableResponse;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,46 +99,43 @@ public class TaskServiceImpl implements TaskService {
                 .build();
         Task saveTask = taskRepository.save(mapper.map(taskDto,Task.class));
 
+        List<TaskFile> taskFiles = new ArrayList<>();
         if(images!=null){
-            List<TaskFile> taskFiles = new ArrayList<>();
             for (MultipartFile  file:images){
                 TaskFile taskFile = new TaskFile();
                 taskFile.setTask(saveTask);
                 taskFile.setUrl(fileService.uploadImage(file, taskImagePath));
                 taskFiles.add(taskFile);
             }
-            saveTask.setTaskFiles(taskFiles);
-        }else{
-            List<TaskFile> taskFiles = new ArrayList<>();
-            saveTask.setTaskFiles(taskFiles);
         }
+        saveTask.setTaskFiles(taskFiles);
+        List<MileStone> milestones = new ArrayList<>();
         if(mileStoneDtos!=null) {
-            List<MileStone> milestones = new ArrayList<>();
             for (MileStoneDto milestoneDto : mileStoneDtos) {
-                MileStone mileStone=new MileStone();
-                mileStone.setMileStoneName(milestoneDto.getMileStoneName());
-                mileStone.setMileStonePrice(milestoneDto.getMileStonePrice());
-                mileStone.setMilestoneStatus(MilestoneStatus.CREATED);
-                mileStone.setCreatedAt(new Date());
-                if(milestoneDto.getStartDate() !=null &&
-                        milestoneDto.getEndDate()!=null
-                ){
-//                    mileStone.setStartDate(Helper.convertStringToDate(milestoneDto.getStartDate()));
-//                    mileStone.setEndDate(Helper.convertStringToDate(milestoneDto.getEndDate()));
-                        mileStone.setStartDate(milestoneDto.getStartDate());
-                        mileStone.setEndDate(milestoneDto.getEndDate());
-                }
-                mileStone.setTask(saveTask);
+                MileStone mileStone = getMileStone(milestoneDto, saveTask);
                 milestones.add(mileStone);
             }
-            saveTask.setMileStones(milestones);
-        }else{
-            List<MileStone> milestones = new ArrayList<>();
-            saveTask.setMileStones(milestones);
-
         }
+        saveTask.setMileStones(milestones);
         Task save = taskRepository.save(saveTask);
         return mapper.map(save,TaskDto.class);
+    }
+
+    @NotNull
+    private static MileStone getMileStone(MileStoneDto milestoneDto, Task saveTask) {
+        MileStone mileStone=new MileStone();
+        mileStone.setMileStoneName(milestoneDto.getMileStoneName());
+        mileStone.setMileStonePrice(milestoneDto.getMileStonePrice());
+        mileStone.setMilestoneStatus(MilestoneStatus.CREATED);
+        mileStone.setCreatedAt(new Date());
+        if(milestoneDto.getStartDate() !=null &&
+                milestoneDto.getEndDate()!=null
+        ){
+                mileStone.setStartDate(milestoneDto.getStartDate());
+                mileStone.setEndDate(milestoneDto.getEndDate());
+        }
+        mileStone.setTask(saveTask);
+        return mileStone;
     }
 
     @Override
