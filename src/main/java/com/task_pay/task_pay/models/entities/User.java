@@ -1,5 +1,4 @@
 package com.task_pay.task_pay.models.entities;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.task_pay.task_pay.models.enums.Role;
 import com.task_pay.task_pay.models.enums.UserType;
 import jakarta.persistence.*;

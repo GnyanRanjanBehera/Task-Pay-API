@@ -1,10 +1,8 @@
 package com.task_pay.task_pay.controllers;
 import com.razorpay.RazorpayException;
-import com.task_pay.task_pay.payloads.PaymentRequest;
 import com.task_pay.task_pay.payloads.ApiMessageResponse;
 import com.task_pay.task_pay.payloads.CheckOutOption;
 import com.task_pay.task_pay.services.PaymentService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,25 +64,51 @@ public class PaymentController {
     }
 
     @PostMapping("/releasedRequestPayment")
-    public ResponseEntity<ApiMessageResponse> releasedRequestPayment(){
-        return null;
+    public ResponseEntity<ApiMessageResponse> releasedRequestPayment(
+            @RequestParam(value ="senderId") Integer senderId,
+            @RequestParam(value = "receiverId") Integer receiverId,
+            @RequestParam(value = "taskId") Integer taskId
+    ){
+        paymentService.releasedRequestPayment(senderId,receiverId,taskId);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("request to released payment successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
 
     @PostMapping("/releasedRequestMilestonePayment")
-    public  ResponseEntity<ApiMessageResponse> releasedRequestMilestonePayment(){
-        return null;
+    public  ResponseEntity<ApiMessageResponse> releasedRequestMilestonePayment(
+            @RequestParam(value ="senderId") Integer senderId,
+            @RequestParam(value = "receiverId") Integer receiverId,
+            @RequestParam(value = "taskId") Integer taskId,
+            @RequestParam(value = "milestoneId") Integer milestoneId
+    ){
+        paymentService.releasedRequestMilestonePayment(senderId, receiverId, taskId, milestoneId);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("request to released payment successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
 
 
 
     @PostMapping("/buyerReleasedPayment")
-    public ResponseEntity<ApiMessageResponse> buyerReleasedPayment(){
-        return null;
+    public ResponseEntity<ApiMessageResponse> buyerReleasedPayment(
+            @RequestParam(value ="senderId") Integer senderId,
+            @RequestParam(value = "receiverId") Integer receiverId,
+            @RequestParam(value = "taskId") Integer taskId
+    ){
+        paymentService.buyerReleasedPayment(senderId,receiverId,taskId);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("request to released payment successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
 
     @PostMapping("/buyerReleasedMilestonePayment")
-    public  ResponseEntity<ApiMessageResponse> buyerReleasedMilestonePayment(){
-        return null;
+    public  ResponseEntity<ApiMessageResponse> buyerReleasedMilestonePayment(
+            @RequestParam(value ="senderId") Integer senderId,
+            @RequestParam(value = "receiverId") Integer receiverId,
+            @RequestParam(value = "taskId") Integer taskId,
+            @RequestParam(value = "milestoneId") Integer milestoneId
+    ){
+        paymentService.buyerReleasedMilestonePayment(senderId, receiverId, taskId, milestoneId);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("request to released payment successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
 
 }
