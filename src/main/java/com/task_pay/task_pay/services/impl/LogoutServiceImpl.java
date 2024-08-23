@@ -20,7 +20,6 @@ public class LogoutServiceImpl implements LogoutHandler {
                        Authentication authentication) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        System.out.println("Calling the function of logout===============");
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             return;
         }

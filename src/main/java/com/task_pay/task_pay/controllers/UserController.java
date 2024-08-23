@@ -47,6 +47,12 @@ public class UserController {
         return new ResponseEntity<>(userDto,HttpStatus.OK);
     }
 
+    @PutMapping("/updateProfile")
+    public ResponseEntity<AuthenticationResponse> updateProfile(@Valid @RequestBody UserDto userDto){
+        AuthenticationResponse authenticationResponse = userService.updateProfile(userDto);
+        return new ResponseEntity<>(authenticationResponse,HttpStatus.OK);
+    }
+
     @PutMapping("/updateUserType/{userId}")
     public  ResponseEntity<AuthenticationResponse> updateUserType(
             @PathVariable(required = true) Integer userId,

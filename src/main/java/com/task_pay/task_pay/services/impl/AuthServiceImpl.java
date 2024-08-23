@@ -127,13 +127,13 @@ public class AuthServiceImpl implements AuthService {
     public AuthenticationResponse signIn(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getMobileNumber(),
+                        request.getEmail(),
                         request.getPassword()
                 )
         );
         User user = userRepository
-                .findByMobileNumber(request.getMobileNumber())
-                .orElseThrow(() -> new ResourceNotFoundException("Mobile Number and password doesn't match"));
+                .findByMobileNumber(request.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Email and password doesn't match"));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);

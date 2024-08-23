@@ -1,8 +1,5 @@
 package com.task_pay.task_pay.configurations;
-import com.task_pay.task_pay.models.enums.Permission;
-import com.task_pay.task_pay.models.enums.Role;
 import com.task_pay.task_pay.security.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +14,16 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-
 import static com.task_pay.task_pay.models.enums.Permission.*;
 import static com.task_pay.task_pay.models.enums.Role.*;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.Customizer.withDefaults;
+
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -43,7 +45,6 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_URLS = {
             "/api/auth/**",
-            //  "/api/payment/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -58,40 +59,44 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(withDefaults())
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//        http.cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 // no restrictions
                                 .requestMatchers(PUBLIC_URLS)
                                 .permitAll()
+
+
                                 // Admin endpoint: only admin can access
-                                .requestMatchers("/api/user/**").hasAnyRole(ADMIN.name())
-                                .requestMatchers(GET, "/api/user/**").hasAnyAuthority(ADMIN_READ.name())
-                                .requestMatchers(POST, "/api/user/**").hasAuthority(ADMIN_CREATE.name())
-                                .requestMatchers(PUT, "/api/user/**").hasAuthority(ADMIN_UPDATE.name())
-                                .requestMatchers(DELETE, "/api/user/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/user/**").hasAnyRole(ADMIN.name(),USER.name())
+                                .requestMatchers(GET, "/api/user/**").hasAnyAuthority(ADMIN_READ.name(),USER_READ.name())
+                                .requestMatchers(POST, "/api/user/**").hasAnyAuthority(ADMIN_CREATE.name(),USER_CREATE.name())
+                                .requestMatchers(PUT, "/api/user/**").hasAnyAuthority(ADMIN_UPDATE.name(),USER_UPDATE.name())
+                                .requestMatchers(DELETE, "/api/user/**").hasAnyAuthority(ADMIN_DELETE.name(),USER_DELETE.name())
 
 
-                                .requestMatchers("/api/invite/**").hasRole(ADMIN.name())
-                                .requestMatchers(GET,"/api/invite/**").hasAuthority(ADMIN_READ.name())
-                                .requestMatchers(POST,"/api/invite/**").hasAuthority(ADMIN_CREATE.name())
-                                .requestMatchers(PUT,"/api/invite/**").hasAuthority(ADMIN_UPDATE.name())
-                                .requestMatchers(DELETE,"/api/invite/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/invite/**").hasAnyRole(ADMIN.name(),USER.name())
+                                .requestMatchers(GET,"/api/invite/**").hasAnyAuthority(ADMIN_READ.name(),USER_READ.name())
+                                .requestMatchers(POST,"/api/invite/**").hasAnyAuthority(ADMIN_CREATE.name(),USER_CREATE.name())
+                                .requestMatchers(PUT,"/api/invite/**").hasAnyAuthority(ADMIN_UPDATE.name(),USER_UPDATE.name())
+                                .requestMatchers(DELETE,"/api/invite/**").hasAnyAuthority(ADMIN_DELETE.name(),USER_DELETE.name())
 
 
-                                .requestMatchers("/api/task/**").hasRole(ADMIN.name())
-                                .requestMatchers(GET,"/api/task/**").hasAuthority(ADMIN_READ.name())
-                                .requestMatchers(POST,"/api/task/**").hasAuthority(ADMIN_CREATE.name())
-                                .requestMatchers(PUT,"/api/task/**").hasAuthority(ADMIN_UPDATE.name())
-                                .requestMatchers(DELETE,"/api/task/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/task/**").hasAnyRole(ADMIN.name(),USER.name())
+                                .requestMatchers(GET,"/api/task/**").hasAnyAuthority(ADMIN_READ.name(),USER_READ.name())
+                                .requestMatchers(POST,"/api/task/**").hasAnyAuthority(ADMIN_CREATE.name(),USER_CREATE.name())
+                                .requestMatchers(PUT,"/api/task/**").hasAnyAuthority(ADMIN_UPDATE.name(),USER_UPDATE.name())
+                                .requestMatchers(DELETE,"/api/task/**").hasAnyAuthority(ADMIN_DELETE.name(),USER_DELETE.name())
 
 
-                                .requestMatchers("/api/payment/**").hasRole(ADMIN.name())
-                                .requestMatchers(GET,"/api/payment/**").hasAuthority(ADMIN_READ.name())
-                                .requestMatchers(POST,"/api/payment/**").hasAuthority(ADMIN_CREATE.name())
-                                .requestMatchers(PUT,"/api/payment/**").hasAuthority(ADMIN_UPDATE.name())
-                                .requestMatchers(DELETE,"/api/payment/**").hasAuthority(ADMIN_DELETE.name())
+                                .requestMatchers("/api/payment/**").hasAnyRole(ADMIN.name(),USER.name())
+                                .requestMatchers(GET,"/api/payment/**").hasAnyAuthority(ADMIN_READ.name(),USER_READ.name())
+                                .requestMatchers(POST,"/api/payment/**").hasAnyAuthority(ADMIN_CREATE.name(),USER_CREATE.name())
+                                .requestMatchers(PUT,"/api/payment/**").hasAnyAuthority(ADMIN_UPDATE.name(),USER_UPDATE.name())
+                                .requestMatchers(DELETE,"/api/payment/**").hasAnyAuthority(ADMIN_DELETE.name(),USER_DELETE.name())
+
 
                                 //Banker end point:only banker can access
                                 .requestMatchers("/api/banker/**").hasRole(BANKER.name())
@@ -105,23 +110,6 @@ public class SecurityConfig {
                                 .requestMatchers("/api/banker/**").hasRole(BANKER.name())
                                 .requestMatchers(GET,"/api/banker/**").hasAuthority(BANKER_READ.name())
 
-
-                                //User end point:only user can access
-//                                .requestMatchers("/api/user/**").hasRole(USER.name())
-//                                .requestMatchers(GET,"/api/user/fetchUserById{userId}").hasAuthority(USER_READ.name())
-//                                .requestMatchers(PUT,"/api/user/updateUserType/{userId}").hasAuthority(USER_UPDATE.name())
-//                                .requestMatchers(PUT,"/api/user/updatePassword").hasAuthority(USER_UPDATE.name())
-//                                .requestMatchers(POST,"/api/user/uploadUserImage/{userId}").hasAuthority(USER_CREATE.name())
-//                                .requestMatchers(GET,"/api/user/serveUserImage/{userId}").hasAuthority(USER_READ.name())
-//                                .requestMatchers("/api/invite/**").hasRole(USER.name())
-//                                .requestMatchers(GET,"/api/invite/**").hasAuthority(USER_READ.name())
-//                                .requestMatchers(POST,"/api/invite/**").hasAuthority(USER_CREATE.name())
-//                                .requestMatchers(PUT,"/api/invite/**").hasAuthority(USER_UPDATE.name())
-//                                .requestMatchers(DELETE,"/api/invite/**").hasAuthority(USER_DELETE.name())
-//                                .requestMatchers("/api/task/**").hasRole(USER.name())
-//                                .requestMatchers(GET,"/api/task/**").hasAuthority(USER_READ.name())
-//                                .requestMatchers(POST,"/api/task/**").hasAuthority(USER_CREATE.name())
-//                                .requestMatchers(PUT,"/api/task/**").hasAuthority(USER_UPDATE.name())
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -144,4 +132,20 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.applyPermitDefaultValues();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**",configuration);
+        return source;
+    }
+
+
+
 }

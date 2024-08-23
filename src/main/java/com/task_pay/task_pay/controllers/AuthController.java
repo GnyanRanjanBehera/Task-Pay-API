@@ -54,7 +54,7 @@ public class AuthController {
     public ResponseEntity<?> signIn(
             @Valid  @RequestBody AuthenticationRequest request
     ) {
-        User user = userRepository.findByMobileNumber(request.getMobileNumber()).orElseThrow(() -> new ResourceNotFoundException("user not found with this userId !"));
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException("user not found with this email and password !"));
         if(user.isBlock()){
             ApiMessageResponse response = ApiMessageResponse.
                     builder().message("Something went wrong !").success(false).status(HttpStatus.NOT_FOUND).build();

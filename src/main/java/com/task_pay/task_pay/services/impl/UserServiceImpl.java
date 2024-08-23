@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
@@ -36,7 +37,22 @@ public class UserServiceImpl implements UserService {
     public AuthenticationResponse updateProfile(UserDto userDto) {
         User user = userRepository.findById(userDto.getUserId()).
                 orElseThrow(() -> new ResourceNotFoundException("User not found with given userId !"));
-        user.setProfilePic(userDto.getProfilePic());
+        if(StringUtils.hasText(userDto.getName())){
+            user.setName(userDto.getName());
+        }
+        if(StringUtils.hasText(userDto.getExpertIn())){
+            user.setExpertIn(userDto.getExpertIn());
+        }
+        if(StringUtils.hasText(userDto.getAbout())){
+            user.setAbout(userDto.getAbout());
+        }
+        if(StringUtils.hasText(userDto.getMobileNumber())){
+            user.setMobileNumber(userDto.getMobileNumber());
+        }
+        if(StringUtils.hasText(userDto.getEmail())){
+            user.setMobileNumber(userDto.getEmail());
+        }
+
         User saveUser = userRepository.save(user);
         return AuthenticationResponse.builder().user(mapper.map(saveUser,UserDto.class)).build();
     }
@@ -52,10 +68,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    @Override
-    public AuthenticationResponse updateMobileNumber(Integer userId, String mobileNumber) {
-        return null;
-    }
 
     @Override
     public ApiMessageResponse updatePassword(Integer userId, String currPassword, String newPassword) {
@@ -107,7 +119,4 @@ public class UserServiceImpl implements UserService {
             userRepository.delete(user);
         }
     }
-
-
-
 }
