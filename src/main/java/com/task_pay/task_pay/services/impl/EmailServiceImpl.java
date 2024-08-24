@@ -1,27 +1,53 @@
-//package com.task_pay.task_pay.services.impl;
-//import jakarta.mail.MessagingException;
-//import jakarta.mail.internet.MimeMessage;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.mail.SimpleMailMessage;
-//import org.springframework.mail.javamail.JavaMailSender;
-//import org.springframework.mail.javamail.MimeMessageHelper;
-//import org.springframework.stereotype.Service;
-//import java.io.IOException;
-//import java.nio.charset.Charset;
-//import java.nio.charset.StandardCharsets;
-//import java.util.Base64;
-//import java.util.Random;
-//import java.util.UUID;
-//
-//@Service
-//public class EmailServiceImpl{
-//    Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
-//
-//    @Autowired JavaMailSender javaMailSender;
-//    @Autowired ValorOtpCache valorOtpCache;
-//
+package com.task_pay.task_pay.services.impl;
+import com.task_pay.task_pay.services.EmailService;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Random;
+import java.util.UUID;
+
+@Service
+public class EmailServiceImpl implements EmailService {
+    Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
+
+    @Autowired JavaMailSender javaMailSender;
+    @Autowired ValorOtpCache valorOtpCache;
+
+
+    @Override
+    public void sendEmailWithOTP(String deviceId, String email) throws MessagingException {
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        helper.setTo(email);
+        helper.setSubject("TaskPay");
+        helper.setText(
+                "<h1>Verify Your TaskPay Account</h1>"
+                        + "<h2>Your OTP Is </h2><br>"
+                        + "<h2>"+generateOtp(deviceId)+" </h2>",
+                true);
+        javaMailSender.send(msg);
+    }
+
+    public String generateOtp(String deviceId)
+    {
+        Random random=new Random();
+        String otp = String.format("%04d", random.nextInt(10000));
+        valorOtpCache.storeInCache(deviceId, otp);
+        return otp;
+    }
+
 //    public boolean sendValidate(String deviceId, String email, String devOrProduction)
 //            throws MessagingException, IOException {
 //
@@ -33,7 +59,7 @@
 //        logger.info("Done");
 //        return true;
 //    }
-//
+
 //    void sendEmail() {
 //
 //        SimpleMailMessage msg = new SimpleMailMessage();
@@ -43,43 +69,15 @@
 //
 //        javaMailSender.send(msg);
 //    }
-//
-//    void sendEmailWithAttachment(String deviceId, String email, String devOrProduction)
-//            throws MessagingException, IOException {
-//
-//        MimeMessage msg = javaMailSender.createMimeMessage();
-//
-//        // true = multipart message
-//        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-//        helper.setTo(email);
-//
-//        helper.setSubject("Valor Account Verification");
-//
-//        helper.setText(
-//                "<h1>Verify Your Valor Account</h1>"
-//                        + "<h2>Your OTP Is </h2><br>"
-//                        + "<h2>"+generateOtp(deviceId)+" </h2>",
-//                true);
-//
-//        //        helper.addAttachment("my_photo.png", new ClassPathResource("android.png"));
-//
-//        javaMailSender.send(msg);
-//    }
-//
-//    public String generateOtp(String deviceId)
-//    {
-//        Random random=new Random();
-//        String otp = String.format("%04d", random.nextInt(10000));
-//        valorOtpCache.storeInCache(deviceId, otp);
-//        return otp;
-//    }
-//
+
+
+
 //    public boolean validateEmail(String deviceId,String otp){
 //        boolean valid = false;
 //        valid = valorOtpCache.getCachedToken(deviceId).equals(otp);
 //        return valid;
 //    }
-//
+
 //    public String generateUinqueCode(String deviceId) {
 //        String uuid = String.valueOf(UUID.randomUUID());
 //        String str = deviceId + ":" + uuid;
@@ -91,7 +89,7 @@
 //        valorOtpCache.storeInCache(deviceId, uuid);
 //        return base64;
 //    }
-//
+
 //    public boolean confirmEmail(String code) throws IllegalArgumentException {
 //        boolean valid = false;
 //        String decodedString;
@@ -107,6 +105,6 @@
 //        }
 //        return valid;
 //    }
-//
-//
-//}
+
+
+}

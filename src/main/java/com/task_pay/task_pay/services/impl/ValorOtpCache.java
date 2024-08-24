@@ -6,9 +6,11 @@ import com.google.common.cache.LoadingCache;
 import com.task_pay.task_pay.services.ValorCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
+@Service
 public class ValorOtpCache implements ValorCache {
 
     Logger logger = LoggerFactory.getLogger(ValorOtpCache.class);

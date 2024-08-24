@@ -10,6 +10,7 @@ import com.task_pay.task_pay.payloads.AuthenticationRequest;
 import com.task_pay.task_pay.payloads.SendOtpRequest;
 import com.task_pay.task_pay.payloads.ApiMessageResponse;
 import com.task_pay.task_pay.payloads.AuthenticationResponse;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class AuthController {
     private UserRepository userRepository;
 
     @PostMapping("/sendOTP")
-    public  ResponseEntity<ApiMessageResponse> sendOTP(@Valid @RequestBody SendOtpRequest request){
+    public  ResponseEntity<ApiMessageResponse> sendOTP(@Valid @RequestBody SendOtpRequest request) throws MessagingException, IOException {
         ApiMessageResponse response = authService.sendOTP(request);
         if (response.getStatus()==HttpStatus.NOT_FOUND){
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

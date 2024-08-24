@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SendOtpRequest {
 
+    @NotBlank(message = "deviceId required")
+    private String deviceId;
+
     @NotBlank(message = "mobileNumber required")
     private String mobileNumber;
 

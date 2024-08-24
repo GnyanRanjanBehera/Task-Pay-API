@@ -1,6 +1,9 @@
 package com.task_pay.task_pay.services;
 
-public interface EmailService {
+import jakarta.mail.MessagingException;
 
-    void sendEmailWithAttachment(String deviceId, String email, String devOrProduction);
+import java.io.IOException;
+
+public interface EmailService {
+    void sendEmailWithOTP(String deviceId, String email) throws MessagingException;
 }

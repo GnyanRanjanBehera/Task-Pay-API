@@ -4,6 +4,7 @@ import com.task_pay.task_pay.payloads.AuthenticationRequest;
 import com.task_pay.task_pay.payloads.SendOtpRequest;
 import com.task_pay.task_pay.payloads.ApiMessageResponse;
 import com.task_pay.task_pay.payloads.AuthenticationResponse;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -11,7 +12,7 @@ import java.io.IOException;
 
 public interface AuthService {
 
-    ApiMessageResponse sendOTP(SendOtpRequest request);
+    ApiMessageResponse sendOTP(SendOtpRequest request) throws MessagingException;
     AuthenticationResponse verifyOTP(UserDto userDto,String OTP);
 
     AuthenticationResponse signIn(AuthenticationRequest request);

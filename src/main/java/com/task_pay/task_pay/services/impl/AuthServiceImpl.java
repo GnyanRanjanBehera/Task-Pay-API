@@ -14,6 +14,8 @@ import com.task_pay.task_pay.payloads.AuthenticationRequest;
 import com.task_pay.task_pay.payloads.SendOtpRequest;
 import com.task_pay.task_pay.payloads.ApiMessageResponse;
 import com.task_pay.task_pay.payloads.AuthenticationResponse;
+import com.task_pay.task_pay.services.EmailService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -53,9 +55,13 @@ public class AuthServiceImpl implements AuthService {
     @Value("${user.image.path}")
     private  String userImagePath;
 
+    @Autowired
+    private EmailService emailService;
+
+
 
     @Override
-    public  ApiMessageResponse sendOTP(SendOtpRequest request) {
+    public  ApiMessageResponse sendOTP(SendOtpRequest request) throws MessagingException {
         Optional<User> userByNumber = userRepository.findByMobileNumber(request.getMobileNumber());
         Optional<User> userByEmail = userRepository.findByEmail(request.getEmail());
         if(userByNumber.isPresent() && userByEmail.isEmpty()) {
@@ -86,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-
+      emailService.sendEmailWithOTP(request.getDeviceId(),request.getEmail());
         return ApiMessageResponse.builder().
                 message("OTP send successfully").
                 success(true).status(HttpStatus.OK).build();
