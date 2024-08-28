@@ -138,7 +138,7 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
         User user = userRepository
-                .findByMobileNumber(request.getEmail())
+                .findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Email and password doesn't match"));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);

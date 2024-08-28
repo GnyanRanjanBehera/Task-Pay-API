@@ -27,7 +27,7 @@ public class ProjectConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByMobileNumber(username).orElseThrow(()->new ResourceNotFoundException("user not found"));
+        return username -> repository.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("user not found with this email !"));
     }
 
     @Bean

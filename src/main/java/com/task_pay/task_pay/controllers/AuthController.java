@@ -53,14 +53,16 @@ public class AuthController {
     }
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(
-            @Valid  @RequestBody AuthenticationRequest request
+            @Valid @RequestBody AuthenticationRequest request
     ) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException("user not found with this email and password !"));
+        System.out.println("user of sign in===="+user.getEmail());
         if(user.isBlock()){
             ApiMessageResponse response = ApiMessageResponse.
                     builder().message("Something went wrong !").success(false).status(HttpStatus.NOT_FOUND).build();
             return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
         }else{
+            System.out.println("execute of else statement====");
             return new ResponseEntity<>(authService.signIn(request), HttpStatus.OK);
         }
 
