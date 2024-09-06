@@ -7,7 +7,7 @@ import com.task_pay.task_pay.payloads.AuthenticationResponse;
 import com.task_pay.task_pay.payloads.PageableResponse;
 
 public interface UserService {
-
+    void addFcmToken(String email,String fcmToken);
     AuthenticationResponse updateProfile(UserDto userDto);
     AuthenticationResponse updateUserType(Integer userId, UserType userType);
 

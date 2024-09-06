@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.enums.UserType;
+import com.task_pay.task_pay.security.JwtService;
 import com.task_pay.task_pay.services.AuthService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.UserService;
@@ -40,6 +41,20 @@ public class UserController {
 
     @Value("${user.image.path}")
     private  String userImagePath;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @PostMapping("/addFcmToken")
+    public ResponseEntity<ApiMessageResponse> addFcmToken(
+            @RequestHeader("Authorization") String token,
+            @RequestParam("fcmToken") String fcmToken){
+        String bearer = token.replace("Bearer ", "");
+        String email = jwtService.extractUsername(bearer);
+        userService.addFcmToken(email,fcmToken);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("fcmToken add successfully").success(true).status(HttpStatus.OK).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
+    }
 
     @GetMapping("/fetchUserById{userId}")
     public  ResponseEntity<UserDto> fetchUserById(@Valid @PathVariable("userId") Integer userId){

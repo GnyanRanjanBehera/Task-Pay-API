@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.util.Objects;
 
 
@@ -33,6 +32,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Override
+    public void addFcmToken(String email,String fcmToken) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found !"));
+        user.setFcmToken(fcmToken);
+        userRepository.save(user);
+    }
+
     @Override
     public AuthenticationResponse updateProfile(UserDto userDto) {
         User user = userRepository.findById(userDto.getUserId()).
