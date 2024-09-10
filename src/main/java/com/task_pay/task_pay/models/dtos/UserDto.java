@@ -20,21 +20,21 @@ public class UserDto {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @NotBlank(message = "name is blank")
+//    @NotBlank(message = "name is blank")
     private String name;
     
     private String profilePic;
 
-    @NotBlank(message = "mobileNumber is blank")
+//    @NotBlank(message = "mobileNumber is blank")
     private String mobileNumber;
 
-    @NotBlank(message = "email is blank")
+//    @NotBlank(message = "email is blank")
     private String email;
 
     @Enumerated(EnumType.STRING)
     private Role role=Role.USER;
 
-    @NotBlank(message = "password is blank")
+//    @NotBlank(message = "password is blank")
     private String password;
 
     private String fcmToken;

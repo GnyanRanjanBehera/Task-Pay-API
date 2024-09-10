@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
             user.setMobileNumber(userDto.getMobileNumber());
         }
         if(StringUtils.hasText(userDto.getEmail())){
-            user.setMobileNumber(userDto.getEmail());
+            user.setEmail(userDto.getEmail());
         }
 
         User saveUser = userRepository.save(user);
