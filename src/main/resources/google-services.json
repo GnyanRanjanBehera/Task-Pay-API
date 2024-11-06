@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "467097275925",
+    "project_id": "taskpay-61ade",
+    "storage_bucket": "taskpay-61ade.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467097275925:android:e96ca8ad9d043f5722c81c",
+        "android_client_info": {
+          "package_name": "com.gnyan.task_pay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2Gc37qme71NQAlGAr_cGQiipvPpIGdOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
