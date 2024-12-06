@@ -92,6 +92,13 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "receiverUser",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<MileStonePayment> receivingMilestonePayments=new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
+    private List<Review> reviews=new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
+    private List<Reply> replies = new ArrayList<>();
+
+
 
 
     @Override

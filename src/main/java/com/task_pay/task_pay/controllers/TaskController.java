@@ -56,6 +56,11 @@ public class TaskController {
             jsonMilestone = taskService.getJson(mileStones);
         }
         System.out.println("print the filess======"+files);
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            String fileType = file.getContentType();
+            System.out.println("File Name: " + fileName + ", Data Type: " + fileType);
+        }
 
         System.out.println("print the mile======"+mileStones);
         TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,files,jsonMilestone);
