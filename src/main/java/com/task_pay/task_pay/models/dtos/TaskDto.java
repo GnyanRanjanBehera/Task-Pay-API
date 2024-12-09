@@ -29,6 +29,9 @@ public class TaskDto {
     @NotBlank(message = "required taskAbout !")
     private String taskAbout;
 
+    @NotBlank(message = "required isFullPayment !")
+    private String isFullPayment;
+
 
     @Enumerated(EnumType.STRING)
     private UserType senderUserType;

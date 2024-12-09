@@ -18,16 +18,16 @@ public class FirebaseConfig {
     @Value("${app.firebase-configuration-file}")
     private String firebaseConfigPath;
 
-    @Bean
-    public FirebaseApp initializeFirebase() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream(firebaseConfigPath);
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
-
-        return FirebaseApp.initializeApp(options);
-
-    }
+//    @Bean
+//    public FirebaseApp initializeFirebase() throws IOException {
+//        FileInputStream serviceAccount = new FileInputStream(firebaseConfigPath);
+//        FirebaseOptions options = new FirebaseOptions.Builder()
+//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+//                .build();
+//
+//        return FirebaseApp.initializeApp(options);
+//
+//    }
 }
 
 

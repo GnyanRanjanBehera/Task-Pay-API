@@ -48,6 +48,7 @@ public class TaskController {
             @RequestParam(value = "taskName") String taskName,
             @RequestParam(value = "taskPrice") Integer taskPrice,
             @RequestParam(value = "taskAbout") String taskAbout,
+            @RequestParam(value = "isFullPayment") String isFullPayment,
             @RequestPart(value = "file",required = false) List<MultipartFile> files,
             @RequestPart(value = "mileStones", required = false)  String mileStones
             ) throws IOException, ParseException {
@@ -63,7 +64,7 @@ public class TaskController {
         }
 
         System.out.println("print the mile======"+mileStones);
-        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId , taskName, taskPrice, taskAbout,files,jsonMilestone);
+        TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId ,isFullPayment, taskName, taskPrice, taskAbout,files,jsonMilestone);
         NotificationRequest notificationRequest = NotificationRequest
                 .builder()
                 .title("Task Assigned")

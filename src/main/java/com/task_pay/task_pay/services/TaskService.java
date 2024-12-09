@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    TaskDto assignTask(Integer userId, Integer assignUserId,
+    TaskDto assignTask(Integer userId, Integer assignUserId,String isFullPayment,
                        String taskName, Integer taskPrice,
                        String taskAbout, List<MultipartFile> taskFiles,List<MileStoneDto> mileStoneDtos) throws IOException, ParseException;
 

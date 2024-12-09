@@ -28,6 +28,9 @@ public class Task {
     @Column(nullable = false)
     private String taskAbout;
 
+    @Column(nullable = false)
+    private  String isFullPayment;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TaskStatus taskStatus;

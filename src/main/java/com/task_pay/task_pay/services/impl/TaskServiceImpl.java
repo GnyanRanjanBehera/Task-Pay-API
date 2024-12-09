@@ -69,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
     @Override
-    public TaskDto assignTask(Integer userId , Integer assignUserId,
+    public TaskDto assignTask(Integer userId , Integer assignUserId,String isFullPayment,
                               String taskName, Integer taskPrice,
                               String taskAbout, List<MultipartFile> images,
                               List<MileStoneDto> mileStoneDtos) throws IOException, ParseException {
@@ -89,6 +89,7 @@ public class TaskServiceImpl implements TaskService {
         TaskDto taskDto = TaskDto.builder()
                 .taskName(taskName)
                 .taskPrice(taskPrice)
+                .isFullPayment(isFullPayment)
                 .taskAbout(taskAbout)
                 .taskStatus(TaskStatus.CREATED)
                 .senderUserType(senderUser.getUserType())
