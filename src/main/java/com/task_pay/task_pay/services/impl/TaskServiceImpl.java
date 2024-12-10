@@ -128,7 +128,11 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto updateTask(UpdateTaskReq updateTaskReq) {
         User user = userRepository.findById(updateTaskReq.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found by this id !"));
         Task task = taskRepository.findById(updateTaskReq.getTaskId()).orElseThrow(() -> new ResourceNotFoundException("Task not found by this id"));
-//        mileStoneRepository
+        List<MileStone> mileStones = task.getMileStones();
+        double totalMisPrice=0.0;
+        for (MileStone m:mileStones){
+            totalMisPrice+=m.getMileStonePrice();
+        }
 //        also calculate milestone price total to to check updated price is grater than milestone then update the task
         task.setTaskName(updateTaskReq.getTaskName());
         if(StringUtils.hasText(updateTaskReq.getTaskName())){
@@ -140,7 +144,7 @@ public class TaskServiceImpl implements TaskService {
         if(updateTaskReq.getTaskPrice() >= task.getTaskPrice()){
             task.setTaskPrice(updateTaskReq.getTaskPrice());
         }else{
-            throw new ResourceNotFoundException("Your enter");
+            throw new ResourceNotFoundException("Your enter amount");
         }
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask,TaskDto.class);
