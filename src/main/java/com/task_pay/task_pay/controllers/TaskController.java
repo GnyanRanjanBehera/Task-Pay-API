@@ -1,6 +1,8 @@
 package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.*;
+import com.task_pay.task_pay.payloads.ApiMessageResponse;
+import com.task_pay.task_pay.payloads.UpdateTaskReq;
 import com.task_pay.task_pay.services.FCMService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.TaskService;
@@ -81,6 +83,37 @@ public class TaskController {
         }
         return  new ResponseEntity<>(taskDto,HttpStatus.OK);
     }
+
+    @PutMapping("/updateTask")
+    public ResponseEntity<TaskDto> updateTask(@Validated @RequestBody UpdateTaskReq updateTaskReq){
+        TaskDto taskDto = taskService.updateTask(updateTaskReq);
+        NotificationRequest notificationRequest = NotificationRequest
+                .builder()
+                .title("Task Updated")
+                .topic("Task")
+                .body("Task updated by"+taskDto.getReceiverUser().getName())
+                .token(taskDto.getSenderUser().getFcmToken())
+                .build();
+        try {
+            if (notificationRequest.getToken() != null && !notificationRequest.getToken().isEmpty()) {
+                fcmService.sendMessageToToken(notificationRequest);
+            }
+        }catch (InterruptedException | ExecutionException ignored){
+            return new ResponseEntity<>(taskDto,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(taskDto,HttpStatus.OK);
+    }
+
+    @PutMapping("/deleteTask")
+    public ResponseEntity<ApiMessageResponse> deleteTask(
+            @RequestParam(value = "userId",required = true) Integer userId,
+            @RequestParam(value = "taskId",required = true) Integer taskId
+    ){
+        taskService.deleteTask(userId,taskId);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("task deleted successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
+    }
+
     @GetMapping("/fetchBuyerTasks/{userId}")
     public ResponseEntity<PageableResponse<TaskDto>> fetchBuyerTasks(
             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,

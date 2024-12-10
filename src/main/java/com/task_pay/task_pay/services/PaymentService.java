@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.services;
 
 import com.razorpay.RazorpayException;
+import com.task_pay.task_pay.models.dtos.PaymentDto;
 import com.task_pay.task_pay.models.entities.Payment;
 import com.task_pay.task_pay.payloads.CheckOutOption;
 import com.task_pay.task_pay.payloads.PageableResponse;
@@ -23,6 +24,6 @@ public interface PaymentService {
 
     void buyerReleasedMilestonePayment(Integer senderId,Integer receiverId,Integer taskId,Integer milestoneId);
 
-//    PageableResponse<Payment> getPaymentOfUser(Integer userId, int pageNumber, int pageSize, String sortBy, String sortDir);
+    PageableResponse<PaymentDto> fetchSenderPayment(Integer userId, int pageNumber, int pageSize, String sortBy, String sortDir);
 
 }

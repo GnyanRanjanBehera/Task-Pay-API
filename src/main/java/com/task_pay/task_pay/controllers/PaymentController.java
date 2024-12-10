@@ -1,7 +1,11 @@
 package com.task_pay.task_pay.controllers;
 import com.razorpay.RazorpayException;
+import com.task_pay.task_pay.models.dtos.PaymentDto;
+import com.task_pay.task_pay.models.dtos.UserDto;
+import com.task_pay.task_pay.models.entities.Payment;
 import com.task_pay.task_pay.payloads.ApiMessageResponse;
 import com.task_pay.task_pay.payloads.CheckOutOption;
+import com.task_pay.task_pay.payloads.PageableResponse;
 import com.task_pay.task_pay.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -109,6 +113,20 @@ public class PaymentController {
         paymentService.buyerReleasedMilestonePayment(senderId, receiverId, taskId, milestoneId);
         ApiMessageResponse successfully = ApiMessageResponse.builder().message("request to released payment successfully").status(HttpStatus.OK).success(true).build();
         return new ResponseEntity<>(successfully,HttpStatus.OK);
+    }
+
+    @GetMapping("/fetchSenderPayment")
+    public ResponseEntity<PageableResponse<PaymentDto>> fetchSenderPayment(
+            @RequestParam(value = "userId",required = true) Integer userId,
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
+            @RequestParam(value = "sortBy",defaultValue = "name",required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir){
+
+        PageableResponse<PaymentDto> paymentPageableResponse = paymentService.fetchSenderPayment(userId, pageNumber, pageSize, sortBy, sortDir);
+        return new ResponseEntity<>(paymentPageableResponse,HttpStatus.OK);
+
+
     }
 
 }

@@ -4,18 +4,27 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
+import com.task_pay.task_pay.models.dtos.PaymentDto;
+import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.*;
 import com.task_pay.task_pay.models.enums.*;
 import com.task_pay.task_pay.payloads.CheckOutOption;
+import com.task_pay.task_pay.payloads.PageableResponse;
 import com.task_pay.task_pay.payloads.Prefill;
 import com.task_pay.task_pay.repositories.*;
 import com.task_pay.task_pay.services.PaymentService;
+import com.task_pay.task_pay.utils.Helper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -55,8 +64,15 @@ public class PaymentServiceImpl implements PaymentService {
                 () -> new ResourceNotFoundException("Seller not found with this id !"));
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task not found with this id !"));
-//        if you want handel logic here if task is status is Accepted
-//        then block payment you can add also add logic here
+
+        if(task.getTaskStatus()==TaskStatus.BLOCKED){
+            throw new ResourceNotFoundException("Payment is already blocked");
+        }
+
+        if(task.getTaskStatus()!=TaskStatus.ACCEPTED){
+            throw  new ResourceNotFoundException("The task is not accepted by seller !");
+        }
+
         Prefill prefill=new Prefill();
         prefill.setName(senderUser.getName());
         prefill.setContact(senderUser.getMobileNumber());
@@ -128,23 +144,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
-//     if(status){
-//        Payment  payment = paymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
-//        com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
-//        payment.setBlockedAt(new Date());
-//        payment.setStatus(PaymentStatus.BLOCKED);
-//        payment.setPaymentId(paymentId);
-//        payment.setMethod(razorPay.get("method"));
-//        paymentRepository.save(payment);
-//    }else{
-//        Payment  payment = paymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
-//        com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
-//        payment.setProcessingAt(new Date());
-//        payment.setStatus(PaymentStatus.PROCESSING);
-//        payment.setPaymentId(paymentId);
-//        payment.setMethod(razorPay.get("method"));
-//        paymentRepository.save(payment);
-//    }
+
 
     @Override
     public CheckOutOption blockMilestonePayment(Integer taskId, Integer milestoneId, Integer senderUserId, Integer receiverUserId)
@@ -155,11 +155,15 @@ public class PaymentServiceImpl implements PaymentService {
                 () -> new ResourceNotFoundException("Seller not found with this id !"));
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task not found with this id !"));
+
+        if(task.getTaskStatus()!=TaskStatus.ACCEPTED){
+            throw  new ResourceNotFoundException("The task is not accepted by seller !");
+        }
         MileStone mileStone = mileStoneRepository.findById(milestoneId).orElseThrow(() -> new ResourceNotFoundException("Milestone not found with id !"));
+        if(mileStone.getMilestoneStatus()==MilestoneStatus.BLOCKED){
+            throw  new ResourceNotFoundException("This milestone payment already done !");
+        }
 
-
-        //        if you want handel logic here if task is status is Accepted
-//        then block payment you can add also add logic here
         Prefill prefill=new Prefill();
         prefill.setName(senderUser.getName());
         prefill.setContact(senderUser.getMobileNumber());
@@ -280,6 +284,14 @@ public class PaymentServiceImpl implements PaymentService {
             mileStoneRepository.save(mileStone);
         }
 
+    }
+
+    @Override
+    public PageableResponse<PaymentDto> fetchSenderPayment(Integer userId, int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = (sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Objects[]> payment = paymentRepository.findBySenderUser_UserId(userId,pageable);
+        return Helper.getPageableResponse(payment, PaymentDto.class);
     }
 
     public static String generateReceiptNumber() {

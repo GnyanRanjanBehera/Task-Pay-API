@@ -12,6 +12,7 @@ import com.task_pay.task_pay.models.entities.User;
 import com.task_pay.task_pay.models.enums.MilestoneStatus;
 import com.task_pay.task_pay.models.enums.TaskStatus;
 import com.task_pay.task_pay.models.enums.UserType;
+import com.task_pay.task_pay.payloads.UpdateTaskReq;
 import com.task_pay.task_pay.repositories.MileStoneRepository;
 import com.task_pay.task_pay.repositories.TaskFileRepository;
 import com.task_pay.task_pay.repositories.TaskRepository;
@@ -32,6 +33,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -70,7 +72,7 @@ public class TaskServiceImpl implements TaskService {
     private final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
     @Override
     public TaskDto assignTask(Integer userId , Integer assignUserId,String isFullPayment,
-                              String taskName, Integer taskPrice,
+                              String taskName, double taskPrice,
                               String taskAbout, List<MultipartFile> images,
                               List<MileStoneDto> mileStoneDtos) throws IOException, ParseException {
 
@@ -121,6 +123,39 @@ public class TaskServiceImpl implements TaskService {
         Task save = taskRepository.save(saveTask);
         return mapper.map(save,TaskDto.class);
     }
+
+    @Override
+    public TaskDto updateTask(UpdateTaskReq updateTaskReq) {
+        User user = userRepository.findById(updateTaskReq.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found by this id !"));
+        Task task = taskRepository.findById(updateTaskReq.getTaskId()).orElseThrow(() -> new ResourceNotFoundException("Task not found by this id"));
+//        mileStoneRepository
+//        also calculate milestone price total to to check updated price is grater than milestone then update the task
+        task.setTaskName(updateTaskReq.getTaskName());
+        if(StringUtils.hasText(updateTaskReq.getTaskName())){
+            task.setTaskName(updateTaskReq.getTaskName());
+        }
+        if(StringUtils.hasText(updateTaskReq.getTaskAbout())){
+            task.setTaskAbout(updateTaskReq.getTaskAbout());
+        }
+        if(updateTaskReq.getTaskPrice() >= task.getTaskPrice()){
+            task.setTaskPrice(updateTaskReq.getTaskPrice());
+        }else{
+            throw new ResourceNotFoundException("Your enter");
+        }
+        Task saveTask = taskRepository.save(task);
+        return mapper.map(saveTask,TaskDto.class);
+    }
+
+
+    @Override
+    public void deleteTask(Integer userId, Integer taskId) {
+        userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("user not found by this id !"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("task not found by this id"));
+        if(task.getTaskStatus()==TaskStatus.CREATED || task.getTaskStatus()==TaskStatus.DECLINED){
+            taskRepository.delete(task);
+        }
+    }
+
 
     @NotNull
     private static MileStone getMileStone(MileStoneDto milestoneDto, Task saveTask) {

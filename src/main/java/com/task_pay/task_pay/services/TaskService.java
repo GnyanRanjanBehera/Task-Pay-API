@@ -2,6 +2,7 @@ package com.task_pay.task_pay.services;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
 import com.task_pay.task_pay.payloads.PageableResponse;
+import com.task_pay.task_pay.payloads.UpdateTaskReq;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,8 +13,13 @@ import java.util.List;
 public interface TaskService {
 
     TaskDto assignTask(Integer userId, Integer assignUserId,String isFullPayment,
-                       String taskName, Integer taskPrice,
+                       String taskName, double taskPrice,
                        String taskAbout, List<MultipartFile> taskFiles,List<MileStoneDto> mileStoneDtos) throws IOException, ParseException;
+
+    TaskDto updateTask(UpdateTaskReq updateTaskReq);
+
+    void deleteTask(Integer userId,Integer taskId);
+
 
     List<MileStoneDto> getJson(String milestones) throws IOException;
 

@@ -46,6 +46,8 @@ public class Task {
     @Column(nullable = false)
     private Date createdAt;
 
+    private Date updatedAt;
+
     private Date blockedAt;
 
     private Date acceptedAt;
