@@ -31,6 +31,8 @@ public class MileStone {
 
     private Date blockedAt;
 
+    private Date updatedAt;
+
     private  Date releasedRequestAt;
 
     private Date releasedAt;

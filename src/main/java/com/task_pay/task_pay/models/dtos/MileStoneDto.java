@@ -30,6 +30,10 @@ public class MileStoneDto {
     private Date createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
+    private Date updatedAt;
+
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
     private  Date releasedRequestAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")

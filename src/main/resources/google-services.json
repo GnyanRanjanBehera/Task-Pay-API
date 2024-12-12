@@ -1,29 +1,13 @@
 {
-  "project_info": {
-    "project_number": "467097275925",
-    "project_id": "taskpay-61ade",
-    "storage_bucket": "taskpay-61ade.firebasestorage.app"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:467097275925:android:e96ca8ad9d043f5722c81c",
-        "android_client_info": {
-          "package_name": "com.gnyan.task_pay"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC2Gc37qme71NQAlGAr_cGQiipvPpIGdOw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+  "type": "service_account",
+  "project_id": "taskpay-61ade",
+  "private_key_id": "10bf604b8512da53b58445dd4784e68d8489f067",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCnooyclT7UzyyV\nLxt+vvQVDhVLhnZL4oBn1KHv8jFhw30ht1bHa6BdidqYUhkKXQewJmqa/H66YB9S\nJheZNVuAOmnPi7bo1KAQnbYF60C4tBTRQ36rilsRSJUTYkHw8O6pUmC/CaG7sdO0\nyzm6se67ha2P4d2ITjeMn+jntDQ+UaS2wK4VzGvYeaon1UiCWNFRPxOaLvhfVVeq\nSPQOd1npXURsIHhM+tnFPpEngXPInHIGT5HkoHiaNMXaeU/EIdkbKUzkVkrjOrII\n24O8AECFe6pSbeGbBNI65raHxzk1z/Ipfie6hKBeuHJPRXJnHX6jCImTHfJhdKjN\nPWT1eusdAgMBAAECggEAB+caRQ/Qd7oG7RyHVGJpAYIZtRGzINDeLVGWoHLKQFng\nhmGih2xhPG+mh2udZGyY03AoMpjIhP2e6bbuggmZf/IhBrNcjYg9Pd31f2dvtGrB\nmCZGrIxtTnizFcgaJDieLmDPZfTXXqYbkn3J1wLoO90UNCuEJQF3oxtEdgHmkZvL\nm9iI1+IPWRTE+bI7tbC4LAssEIoO2DPzAzbfRgjgn8Q6Eg4VAQ7erH4TgEpaEQJI\nty8CpU7LwUGduaVni02lmMgvbWC2sL3Tc6AEo9IY4XGOJi4qV1TsXFMaLwwyEmMj\nLYLLKzH2baD6C0e5NgnM8n9RKGiTGcUSWA1GKy1ZSQKBgQDiprhjD7AjTFvUf7me\nUNpxW8l+PFZsWPLDf3qfiUcebzsSXEhDl0qUDG4XWOawbqMxTdm+WKOFLk6sG4Cv\nQ7Sn2XDRQgkeH3tYB8B0z/hyn24iOi4rwZq1QcswiNgLnVHhBCFymvlk9QdblpTi\ni89dw6FAvUH3aeOOfsF39PyWqQKBgQC9V35NoH+uavMKRKOhaqbM/k2551qqgl+F\n03DN0eH3N4b4+7C0cG3HifpwA1tFN4tV4UGsfmy8glt/5XnimV124MefNbd/hFaU\nvBfvnxxX88j/3mMd9HzNe9kv6BpRK3zhfyDlYDDQ0iZ/4gHePYidQsjqBqMajmBy\nukmq1EXdVQKBgFf85SP/2R8664NpOkQNm1/ahDRvdBWHyma+vHnmrydPgx0zmhIz\nT4597Nc/ef8QVGY1lMxiWMjBG2WRH7nqjN2EelmiSyvYiOe5yqsOeaL15al/8KCn\n/klTi3ACD+0iW8EA+4MkSqE4xmx13sK8B/qckaMyVcOY5fBRoQXSo6RRAoGBAK0n\nfIxFQT8i84zqZLJTtKM31aEzoMjaXb0nNrwjOwE4uKiulFUPlHWtC2iwySEtwLET\nRVoYbByhIkh+dc7y7nSu8B/7ogpt3jg7I7Cx09vjSGgm2oIkepX4sxCKtLaSjKwz\n9MOQClSOO0MsTwUNRQh8cP0EgNjiZ/XDw2cEpbfZAoGBAKRRLisKQOiUR9s32gRZ\nZY7ucGCirnFvLQQS+6yKDa8gHsajvICow+kkSWX/Sca4zYjtkx+5Ezp5pg8HEM49\nMl4FbjKT90qEnMkiH/kCQMH1svVj0eCJKtLSiDYOSGrCoOA0IKUJtkBlmaPzizB5\nm8mIdJF5nPRJXaWQr7ltCVKG\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-3d5m0@taskpay-61ade.iam.gserviceaccount.com",
+  "client_id": "113981515985994004407",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-3d5m0%40taskpay-61ade.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
 }

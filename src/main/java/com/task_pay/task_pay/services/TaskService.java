@@ -2,6 +2,7 @@ package com.task_pay.task_pay.services;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
 import com.task_pay.task_pay.payloads.PageableResponse;
+import com.task_pay.task_pay.payloads.UpdateMilestoneReq;
 import com.task_pay.task_pay.payloads.UpdateTaskReq;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,10 @@ public interface TaskService {
     TaskDto updateTask(UpdateTaskReq updateTaskReq);
 
     void deleteTask(Integer userId,Integer taskId);
+
+    MileStoneDto updateMilestone(UpdateMilestoneReq updateMilestoneReq);
+    TaskDto addNewMilestone(MileStoneDto mileStoneDto,Integer taskId);
+    void deleteMilestone(Integer userId,Integer milestoneId);
 
 
     List<MileStoneDto> getJson(String milestones) throws IOException;

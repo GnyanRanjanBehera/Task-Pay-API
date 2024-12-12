@@ -1,14 +1,13 @@
 package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.*;
-import com.task_pay.task_pay.payloads.ApiMessageResponse;
-import com.task_pay.task_pay.payloads.UpdateTaskReq;
+import com.task_pay.task_pay.models.entities.Task;
+import com.task_pay.task_pay.payloads.*;
 import com.task_pay.task_pay.services.FCMService;
 import com.task_pay.task_pay.services.FileService;
 import com.task_pay.task_pay.services.TaskService;
-import com.task_pay.task_pay.payloads.NotificationRequest;
-import com.task_pay.task_pay.payloads.PageableResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -84,7 +83,7 @@ public class TaskController {
                 .builder()
                 .title("Task Updated")
                 .topic("Task")
-                .body("Task updated by"+taskDto.getReceiverUser().getName())
+                .body("Task updated by "+taskDto.getReceiverUser().getName())
                 .token(taskDto.getSenderUser().getFcmToken())
                 .build();
         try {
@@ -97,15 +96,42 @@ public class TaskController {
         return new ResponseEntity<>(taskDto,HttpStatus.OK);
     }
 
-    @PutMapping("/deleteTask")
+    @DeleteMapping("/deleteTask")
     public ResponseEntity<ApiMessageResponse> deleteTask(
             @RequestParam(value = "userId",required = true) Integer userId,
             @RequestParam(value = "taskId",required = true) Integer taskId
     ){
+//        later we will  add notification
         taskService.deleteTask(userId,taskId);
         ApiMessageResponse successfully = ApiMessageResponse.builder().message("task deleted successfully").status(HttpStatus.OK).success(true).build();
         return new ResponseEntity<>(successfully,HttpStatus.OK);
     }
+
+    @PutMapping("/updateMilestone")
+    public ResponseEntity<MileStoneDto> updateMilestone(@Valid @RequestBody UpdateMilestoneReq updateMilestoneReq){
+        MileStoneDto mileStoneDto = taskService.updateMilestone(updateMilestoneReq);
+        return new ResponseEntity<>(mileStoneDto,HttpStatus.OK);
+    }
+
+    @PostMapping("/addNewMilestone/{taskId}")
+    public ResponseEntity<TaskDto> addNewMilestone(
+            @Valid @RequestBody MileStoneDto mileStoneDto,
+           @Valid @PathVariable(required = true) Integer userId){
+        TaskDto taskDto = taskService.addNewMilestone(mileStoneDto, userId);
+        return new ResponseEntity<>(taskDto,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteMilestone")
+    public ResponseEntity<ApiMessageResponse> deleteMilestone(
+            @RequestParam(value = "userId",required = true) Integer userId,
+            @RequestParam(value = "mileStoneId",required = true) Integer mileStoneId
+    ){
+//        later we will  add notification
+        taskService.deleteMilestone(userId,mileStoneId);
+        ApiMessageResponse successfully = ApiMessageResponse.builder().message("Milestone delete deleted successfully").status(HttpStatus.OK).success(true).build();
+        return new ResponseEntity<>(successfully,HttpStatus.OK);
+    }
+
 
     @GetMapping("/fetchBuyerTasks/{userId}")
     public ResponseEntity<PageableResponse<TaskDto>> fetchBuyerTasks(
@@ -142,7 +168,7 @@ public class TaskController {
                 .builder()
                 .title("Task Accepted")
                 .topic("Task")
-                .body("Task accepted by"+taskDto.getReceiverUser().getName())
+                .body("Task accepted by "+taskDto.getReceiverUser().getName())
                 .token(taskDto.getSenderUser().getFcmToken())
                 .build();
         try {
@@ -165,7 +191,7 @@ public class TaskController {
         NotificationRequest notificationRequest = NotificationRequest
                 .builder()
                 .title("Task Declined")
-                .body("Task declined by"+taskDto.getReceiverUser().getName())
+                .body("Task declined by "+taskDto.getReceiverUser().getName())
                 .topic("Task")
                 .token(taskDto.getSenderUser().getFcmToken())
                 .build();
@@ -179,6 +205,9 @@ public class TaskController {
         return new ResponseEntity<>(taskDto,HttpStatus.OK);
 
     }
+
+
+
 
 
     @GetMapping("/serveTaskImage/{taskId}/{imgId}")
