@@ -14,7 +14,6 @@ public interface AuthService {
 
     ApiMessageResponse sendOTP(SendOtpRequest request) throws MessagingException;
     AuthenticationResponse verifyOTP(UserDto userDto,String OTP);
-
     AuthenticationResponse signIn(AuthenticationRequest request);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 

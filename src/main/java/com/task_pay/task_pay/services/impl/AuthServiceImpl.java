@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-      emailService.sendEmailWithOTP(request.getDeviceId(),request.getEmail());
+//      emailService.sendEmailWithOTP(request.getDeviceId(),request.getEmail());
         return ApiMessageResponse.builder().
                 message("OTP send successfully").
                 success(true).status(HttpStatus.OK).build();
@@ -109,6 +109,7 @@ public class AuthServiceImpl implements AuthService {
                 .name(userDto.getName())
                 .profilePic(userDto.getProfilePic())
                 .email(userDto.getEmail())
+                .deviceId(userDto.getDeviceId())
                 .mobileNumber(userDto.getMobileNumber())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .invitationCode(invitationCode)

@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface TaskService {
 
-    TaskDto assignTask(Integer userId, Integer assignUserId,String isFullPayment,
+    TaskDto assignTask(Integer senderUserId, Integer receiverUserId,String isFullPayment,
                        String taskName, double taskPrice,
                        String taskAbout, List<MultipartFile> taskFiles,List<MileStoneDto> mileStoneDtos) throws IOException, ParseException;
 

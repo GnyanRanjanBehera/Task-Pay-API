@@ -48,24 +48,17 @@ public class TaskController {
             @RequestParam(value = "senderUserId") Integer senderUserId,
             @RequestParam(value = "receiverUserId") Integer receiverUserId,
             @RequestParam(value = "taskName") String taskName,
-            @RequestParam(value = "taskPrice") Integer taskPrice,
+            @RequestParam(value = "taskPrice") double taskPrice,
             @RequestParam(value = "taskAbout") String taskAbout,
             @RequestParam(value = "isFullPayment") String isFullPayment,
             @RequestPart(value = "file",required = false) List<MultipartFile> files,
             @RequestPart(value = "mileStones", required = false)  String mileStones
             ) throws IOException, ParseException {
+
         List<MileStoneDto> jsonMilestone = null;
         if (mileStones != null && !mileStones.isEmpty()) {
             jsonMilestone = taskService.getJson(mileStones);
         }
-        System.out.println("print the filess======"+files);
-        for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            String fileType = file.getContentType();
-            System.out.println("File Name: " + fileName + ", Data Type: " + fileType);
-        }
-
-        System.out.println("print the mile======"+mileStones);
         TaskDto taskDto = taskService.assignTask(senderUserId,receiverUserId ,isFullPayment, taskName, taskPrice, taskAbout,files,jsonMilestone);
         NotificationRequest notificationRequest = NotificationRequest
                 .builder()

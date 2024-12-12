@@ -15,6 +15,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 @Data
+@ToString
 public class MileStoneDto {
     private Integer id;
 

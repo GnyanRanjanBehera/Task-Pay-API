@@ -14,6 +14,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class UserDto {
     private int userId;
@@ -30,6 +31,8 @@ public class UserDto {
 
 //    @NotBlank(message = "email is blank")
     private String email;
+
+    private String deviceId;
 
     @Enumerated(EnumType.STRING)
     private Role role=Role.USER;

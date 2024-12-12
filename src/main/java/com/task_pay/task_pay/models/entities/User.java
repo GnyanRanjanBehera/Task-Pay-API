@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @Column(nullable = false,unique = true)
     private String email;
 
+    @Column(nullable = false,unique = true)
+    private String deviceId;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

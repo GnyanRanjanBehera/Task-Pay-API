@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@ToString
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

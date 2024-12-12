@@ -7,11 +7,11 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
+
 public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

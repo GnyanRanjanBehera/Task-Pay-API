@@ -47,7 +47,7 @@ public class UserController {
 
     @PostMapping("/addFcmToken")
     public ResponseEntity<ApiMessageResponse> addFcmToken(
-            @RequestHeader("Authorization") String token,
+            @RequestParam("Authorization") String token,
             @RequestParam("fcmToken") String fcmToken){
         String bearer = token.replace("Bearer ", "");
         String email = jwtService.extractUsername(bearer);

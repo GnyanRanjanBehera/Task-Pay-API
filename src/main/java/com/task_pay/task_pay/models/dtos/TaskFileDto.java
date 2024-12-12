@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Data
 public class TaskFileDto {
     private Integer fileId;

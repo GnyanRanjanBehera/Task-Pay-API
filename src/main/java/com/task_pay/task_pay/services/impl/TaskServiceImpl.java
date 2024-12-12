@@ -71,14 +71,14 @@ public class TaskServiceImpl implements TaskService {
 
     private final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
     @Override
-    public TaskDto assignTask(Integer userId , Integer assignUserId,String isFullPayment,
+    public TaskDto assignTask(Integer senderUserId , Integer receiverUserId,String isFullPayment,
                               String taskName, double taskPrice,
                               String taskAbout, List<MultipartFile> images,
                               List<MileStoneDto> mileStoneDtos) throws IOException, ParseException {
 
-        User senderUser = userRepository.findById(userId).orElseThrow(
+        User senderUser = userRepository.findById(senderUserId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
-        User receiverUser = userRepository.findById(assignUserId).orElseThrow(
+        User receiverUser = userRepository.findById(receiverUserId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
 
 
@@ -88,19 +88,23 @@ public class TaskServiceImpl implements TaskService {
             receiverUser.setUserType(UserType.BUYER);
         }
         User saveReceiverUser = userRepository.save(receiverUser);
-        TaskDto taskDto = TaskDto.builder()
+
+        Task task = Task.builder()
                 .taskName(taskName)
+                .createdAt(new Date())
                 .taskPrice(taskPrice)
                 .isFullPayment(isFullPayment)
                 .taskAbout(taskAbout)
                 .taskStatus(TaskStatus.CREATED)
                 .senderUserType(senderUser.getUserType())
                 .receiverUserType(saveReceiverUser.getUserType())
-                .createdAt(new Date())
-                .senderUser(mapper.map(senderUser, UserDto.class))
-                .receiverUser(mapper.map(saveReceiverUser, UserDto.class))
+                .senderUser(senderUser)
+                .receiverUser(saveReceiverUser)
                 .build();
-        Task saveTask = taskRepository.save(mapper.map(taskDto,Task.class));
+
+        System.out.println("task after creating obejct==="+task);
+        Task saveTask = taskRepository.save(task);
+        System.out.println("saveTask==="+saveTask);
 
         List<TaskFile> taskFiles = new ArrayList<>();
         if(images!=null){
@@ -120,6 +124,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }
         saveTask.setMileStones(milestones);
+
         Task save = taskRepository.save(saveTask);
         return mapper.map(save,TaskDto.class);
     }

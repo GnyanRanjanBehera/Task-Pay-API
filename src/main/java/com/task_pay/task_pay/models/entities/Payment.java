@@ -47,7 +47,7 @@ public class Payment {
     @JoinColumn(name = "receiverUserId")
     private User receiverUser;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "taskId")
     private Task task;
 
