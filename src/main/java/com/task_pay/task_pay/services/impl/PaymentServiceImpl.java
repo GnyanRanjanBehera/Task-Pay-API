@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -105,6 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setAmount(checkOutOption.getAmount());
             payment.setCreatedAt(checkOutOption.getCreatedAt());
             paymentRepository.save(payment);
+
         }else{
             payment = new Payment();
             payment.setOrderId(checkOutOption.getOrderId());
@@ -116,6 +118,7 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setSenderUser(senderUser);
             payment.setReceiverUser(receiverUser);
             paymentRepository.save(payment);
+
         }
         return checkOutOption;
     }
@@ -136,24 +139,23 @@ public class PaymentServiceImpl implements PaymentService {
             task.setBlockedAt(new Date());
             payment.setSuccessAt(new Date());
             payment.setStatus(PaymentStatus.SUCCESS);
-            if(payment.getTask().getMileStones()!=null){
-                User user = userRepository.findById(payment.getSenderUser().getUserId())
-                        .orElseThrow(() -> new RuntimeException("User not found with id: "));
-                double totalPrice =
-                        payment.getTask().getMileStones().stream()
-                        .mapToDouble(MileStone::getMileStonePrice)
-                        .sum();
-                double taxAmount=payment.getTask().getTaskPrice();
-                double walletAmount=taxAmount-totalPrice;
-                Wallet wallet = Wallet.builder()
-                        .user(payment.getSenderUser())
-                        .wAmount(walletAmount)
-                        .updatedAt(new Date())
-                        .user(user).build();
-                walletRepository.save(wallet);
 
-
-            }
+//            if(payment.getTask().getMileStones()!=null){
+//                User user = userRepository.findById(payment.getSenderUser().getUserId())
+//                        .orElseThrow(() -> new RuntimeException("User not found with id: "));
+//                double totalPrice =
+//                        payment.getTask().getMileStones().stream()
+//                        .mapToDouble(MileStone::getMileStonePrice)
+//                        .sum();
+//                double taxAmount=payment.getTask().getTaskPrice();
+//                double walletAmount=taxAmount-totalPrice;
+//                Wallet wallet = Wallet.builder()
+//                        .user(payment.getSenderUser())
+//                        .wAmount(walletAmount)
+//                        .updatedAt(new Date())
+//                        .user(user).build();
+//                walletRepository.save(wallet);
+//            }
         }else{
             payment.setProcessingAt(new Date());
             payment.setStatus(PaymentStatus.PROCESSING);
