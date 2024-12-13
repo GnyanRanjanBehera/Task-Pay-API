@@ -38,4 +38,6 @@ public interface TaskService {
 
     TaskDto declineTask(Integer userId,Integer taskId);
 
+    TaskDto reassignTask(Integer taskId,Integer senderUserId ,Integer receiverUserId);
+
 }

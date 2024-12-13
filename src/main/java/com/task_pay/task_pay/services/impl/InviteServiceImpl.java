@@ -40,8 +40,25 @@ public class InviteServiceImpl implements InviteService {
         String mobileNumber = inviteUserRequest.getMobileNumber();
         String invitationCode=inviteUserRequest.getInvitationCode();
         Integer userId = inviteUserRequest.getUserId();
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with this userId"));
+        if(mobileNumber==null && invitationCode!=null && user!=null){
+            User invCodeUser = userRepository.findByInvitationCode(invitationCode).orElseThrow(() -> new ResourceNotFoundException("Invitation code does not exist !"));
+            if(Objects.equals(user.getUserId(), invCodeUser.getUserId())){
+                throw  new ResourceNotFoundException("You can not invited himself/herself !");
+            }
+        }else if (mobileNumber!=null && invitationCode==null && user!=null){
+            User invMobUser = userRepository.findByMobileNumber(mobileNumber).orElseThrow(() -> new ResourceNotFoundException("Mobile number code does not exist !"));
+            if(Objects.equals(user.getUserId(), invMobUser.getUserId())){
+                throw  new ResourceNotFoundException("You can not invited himself/herself !");
+            }
+        }else if (mobileNumber!=null && invitationCode!=null && user!=null) {
+            User invmMobUser = userRepository.findByMobileNumberAndInvitationCode(mobileNumber, invitationCode).orElseThrow(() -> new ResourceNotFoundException("can not find any seller"));
+            if (Objects.equals(user.getUserId(), invmMobUser.getUserId())) {
+                throw new ResourceNotFoundException("You can not invited himself/herself !");
+            }
+        }
 
         if(mobileNumber==null && invitationCode!=null && user!=null){
             User invitedUser = userRepository.findByInvitationCode(invitationCode).orElseThrow(() -> new ResourceNotFoundException("Invitation code does not exist !"));
@@ -89,7 +106,11 @@ public class InviteServiceImpl implements InviteService {
             }
 
         }
+
+
     }
+
+
 
     @Override
     public PageableResponse<InviteDto> fetchInvitedUsers(Integer userId,int pageNumber, int pageSize, String sortBy, String sortDir) {

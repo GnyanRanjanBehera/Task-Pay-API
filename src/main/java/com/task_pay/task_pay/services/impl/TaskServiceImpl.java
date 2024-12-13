@@ -81,8 +81,9 @@ public class TaskServiceImpl implements TaskService {
                 () -> new ResourceNotFoundException("User not found with this id !"));
         User receiverUser = userRepository.findById(receiverUserId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with this id !"));
-
-
+        if(senderUser.getUserId().equals(receiverUser.getUserId())){
+            throw  new ResourceNotFoundException("can not reassigned task himself/herself !");
+        }
         if(Objects.equals(senderUser.getUserType(), UserType.BUYER)){
             receiverUser.setUserType(UserType.SELLER);
         }else{
@@ -115,10 +116,16 @@ public class TaskServiceImpl implements TaskService {
         saveTask.setTaskFiles(taskFiles);
         List<MileStone> milestones = new ArrayList<>();
         if(mileStoneDtos!=null) {
-            for (MileStoneDto milestoneDto : mileStoneDtos) {
-                MileStone mileStone = getMileStone(milestoneDto, saveTask);
-                milestones.add(mileStone);
+            double sumMTotalPrice = mileStoneDtos.stream().mapToDouble(MileStoneDto::getMileStonePrice).sum();
+            if(sumMTotalPrice<=saveTask.getTaskPrice()){
+                for (MileStoneDto milestoneDto : mileStoneDtos) {
+                    MileStone mileStone = getMileStone(milestoneDto, saveTask);
+                    milestones.add(mileStone);
+                }
+            }else{
+                throw new ResourceNotFoundException("Milestone sum of total price should be less than the total tax price !");
             }
+
         }
         saveTask.setMileStones(milestones);
 
@@ -130,31 +137,39 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto updateTask(UpdateTaskReq updateTaskReq) {
         User user = userRepository.findById(updateTaskReq.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found by this id !"));
         Task task = taskRepository.findById(updateTaskReq.getTaskId()).orElseThrow(() -> new ResourceNotFoundException("Task not found by this id"));
-        double totalPrice = task.getMileStones().stream().mapToDouble(MileStone::getMileStonePrice).sum();
-        task.setUpdatedAt(new Date());
-        if(StringUtils.hasText(updateTaskReq.getTaskName())){
-            task.setTaskName(updateTaskReq.getTaskName());
-        }
-        if(StringUtils.hasText(updateTaskReq.getTaskAbout())){
-            task.setTaskAbout(updateTaskReq.getTaskAbout());
-        }
+        if(task.getTaskStatus()==TaskStatus.CREATED || task.getTaskStatus()==TaskStatus.DECLINED){
+            double totalPrice = task.getMileStones() == null
+                    ? 0.0
+                    : task.getMileStones().stream()
+                    .mapToDouble(MileStone::getMileStonePrice)
+                    .sum();
+            task.setUpdatedAt(new Date());
+            if(StringUtils.hasText(updateTaskReq.getTaskName())){
+                task.setTaskName(updateTaskReq.getTaskName());
+            }
+            if(StringUtils.hasText(updateTaskReq.getTaskAbout())){
+                task.setTaskAbout(updateTaskReq.getTaskAbout());
+            }
 
-        if(task.getMileStones().isEmpty()){
-            if(updateTaskReq.getTaskPrice()>0.0){
+            if(task.getMileStones().isEmpty()){
+                if(updateTaskReq.getTaskPrice()>0.0){
+                    task.setTaskPrice(updateTaskReq.getTaskPrice());
+                }else{
+                    throw new ResourceNotFoundException("your enter task amount can be zero");
+                }
+            }else if(totalPrice<=updateTaskReq.getTaskPrice()){
+                task.setTaskPrice(updateTaskReq.getTaskPrice());
+
+            }else{
+                throw new ResourceNotFoundException("Your enter task amount can not be less previous sum of milestone amount");
+            }
+            if(updateTaskReq.getTaskPrice() >= task.getTaskPrice()){
                 task.setTaskPrice(updateTaskReq.getTaskPrice());
             }else{
-                throw new ResourceNotFoundException("your enter task amount can be zero");
+                throw new ResourceNotFoundException("Your enter task amount can not be less previous amount");
             }
-        }else if(totalPrice<=updateTaskReq.getTaskPrice()){
-            task.setTaskPrice(updateTaskReq.getTaskPrice());
-
         }else{
-            throw new ResourceNotFoundException("Your enter task amount can not be less previous sum of milestone amount");
-        }
-        if(updateTaskReq.getTaskPrice() >= task.getTaskPrice()){
-            task.setTaskPrice(updateTaskReq.getTaskPrice());
-        }else{
-            throw new ResourceNotFoundException("Your enter amount");
+            throw new ResourceNotFoundException("You can not update task if task is Accepted by user");
         }
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask,TaskDto.class);
@@ -167,24 +182,32 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("task not found by this id"));
         if(task.getTaskStatus()==TaskStatus.CREATED || task.getTaskStatus()==TaskStatus.DECLINED){
             taskRepository.delete(task);
+        }else {
+            throw new ResourceNotFoundException("Seller already accepted the task you can not delete milestone!");
         }
     }
 
     @Override
     public MileStoneDto updateMilestone(UpdateMilestoneReq updateMilestoneReq) {
         MileStone mileStone = mileStoneRepository.findById(updateMilestoneReq.getMilestoneId()).orElseThrow(() -> new ResourceNotFoundException("Milestone can not found by this id"));
-        double totalMPrice = mileStone.getTask().getMileStones().stream().mapToDouble(MileStone::getMileStonePrice).sum();
-        double taskAmount=mileStone.getTask().getTaskPrice();
-        if(StringUtils.hasText(updateMilestoneReq.getMilestoneName())){
-            mileStone.setMileStoneName(updateMilestoneReq.getMilestoneName());
-        }
-        double deductAmount=taskAmount-totalMPrice;
-        if(updateMilestoneReq.getMilestonePrice()<=deductAmount){
-            mileStone.setMileStonePrice(updateMilestoneReq.getMilestonePrice());
-
+        if(mileStone.getTask().getTaskStatus()==TaskStatus.CREATED || mileStone.getTask().getTaskStatus()==TaskStatus.DECLINED){
+            double totalPrice = mileStone.getTask().getMileStones() == null
+                    ? 0.0
+                    : mileStone.getTask().getMileStones().stream()
+                    .mapToDouble(MileStone::getMileStonePrice)
+                    .sum();
+            double taskAmount=mileStone.getTask().getTaskPrice();
+            if(StringUtils.hasText(updateMilestoneReq.getMilestoneName())){
+                mileStone.setMileStoneName(updateMilestoneReq.getMilestoneName());
+            }
+            double deductAmount=taskAmount-totalPrice;
+            if(updateMilestoneReq.getMilestonePrice()<=deductAmount){
+                mileStone.setMileStonePrice(updateMilestoneReq.getMilestonePrice());
+            }else{
+                throw new ResourceNotFoundException("Your milestone amount is greater than the total amount");
+            }
         }else{
-            throw new ResourceNotFoundException("Your milestone amount is greater than the total amount");
-
+            throw new ResourceNotFoundException("Seller already accepted you task so you can not update milestone !");
         }
         MileStone saveMilestone = mileStoneRepository.save(mileStone);
         return mapper.map(saveMilestone,MileStoneDto.class);
@@ -192,11 +215,20 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto addNewMilestone(MileStoneDto mileStoneDto,Integer taskId) {
-
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Did not find task by this id"));
-        List<MileStone> mileStoneList = new ArrayList<>();
-        mileStoneList.add(mapper.map(mileStoneDto,MileStone.class));
-        task.setMileStones(mileStoneList);
+        double totalPrice =task.getMileStones() == null
+                ? 0.0
+                :task.getMileStones().stream()
+                .mapToDouble(MileStone::getMileStonePrice)
+                .sum();
+        double restAmount=task.getTaskPrice()-totalPrice;
+        if(restAmount>=mileStoneDto.getMileStonePrice()){
+            List<MileStone> mileStoneList = new ArrayList<>();
+            mileStoneList.add(mapper.map(mileStoneDto,MileStone.class));
+            task.setMileStones(mileStoneList);
+        }else{
+          throw  new ResourceNotFoundException("Your milestone price greater than the rest amount");
+        }
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
     }
@@ -204,7 +236,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteMilestone(Integer userId, Integer milestoneId) {
         MileStone mileStone = mileStoneRepository.findById(milestoneId).orElseThrow(() -> new ResourceNotFoundException("milestone can not be found by this id"));
-        mileStoneRepository.delete(mileStone);
+        if(mileStone.getTask().getTaskStatus()==TaskStatus.CREATED || mileStone.getTask().getTaskStatus()==TaskStatus.DECLINED){
+            mileStoneRepository.delete(mileStone);
+        }else{
+            throw new ResourceNotFoundException("Seller already so  accepted you task so you can not delete milestone !");
+        }
+
     }
 
 
@@ -275,5 +312,24 @@ public class TaskServiceImpl implements TaskService {
         task.setDeclinedAt(new Date());
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
+    }
+
+    @Override
+    public TaskDto reassignTask(Integer taskId, Integer senderUserId, Integer receiverUserId) {
+        User senderUser = userRepository.findById(senderUserId).orElseThrow(() -> new ResourceNotFoundException("user not found by this id"));
+        User receiverUser = userRepository.findById(receiverUserId).orElseThrow(() -> new ResourceNotFoundException("Receiver user not found by this id"));
+        if(senderUser.getUserId().equals(receiverUser.getUserId())){
+            throw  new ResourceNotFoundException("can not reassigned task himself/herself !");
+        }
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("task not found by this id !"));
+        if(task.getTaskStatus()==TaskStatus.CREATED || task.getTaskStatus()==TaskStatus.DECLINED){
+            task.setReceiverUser(receiverUser);
+            task.setReassignedAt(new Date());
+        }else{
+            throw  new ResourceNotFoundException("Seller already accepted you task so you can not reassign milestone !");
+        }
+
+        Task reasignedTask = taskRepository.save(task);
+        return mapper.map(reasignedTask, TaskDto.class);
     }
 }

@@ -47,6 +47,9 @@ public class TaskDto {
     private Date createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
+    private Date reassignedAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")
     private Date updatedAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-YYYY")

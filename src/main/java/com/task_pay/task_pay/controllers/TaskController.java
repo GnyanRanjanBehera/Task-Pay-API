@@ -206,6 +206,32 @@ public class TaskController {
 
     }
 
+    @PutMapping("/reassignTask")
+    public ResponseEntity<TaskDto> reassignTask(
+            @RequestParam(required = true) Integer senderUserId,
+            @RequestParam(required = true) Integer receiverUserId,
+            @RequestParam(required = true) Integer taskId
+    ){
+        TaskDto taskDto = taskService.reassignTask(taskId, senderUserId, receiverUserId);
+
+        NotificationRequest notificationRequest = NotificationRequest
+                .builder()
+                .title("Task Assigned")
+                .topic("Task")
+                .body("Task assigned by "+taskDto.getSenderUser().getName())
+                .token(taskDto.getReceiverUser().getFcmToken())
+                .build();
+        try {
+            if (notificationRequest.getToken() != null && !notificationRequest.getToken().isEmpty()) {
+                fcmService.sendMessageToToken(notificationRequest);
+            }
+        }catch (InterruptedException | ExecutionException ignored){
+            return  new ResponseEntity<>(taskDto,HttpStatus.OK);
+        }
+        return  new ResponseEntity<>(taskDto,HttpStatus.OK);
+
+    }
+
 
 
 

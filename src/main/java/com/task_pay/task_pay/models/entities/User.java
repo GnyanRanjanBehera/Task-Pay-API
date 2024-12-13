@@ -71,6 +71,10 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
     private Bank bank;
 
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
+    private Wallet wallet;
+
+
     @OneToMany(mappedBy = "inviteUser",cascade = CascadeType.ALL,orphanRemoval=true)
     private List<Invite> inviteUsers=new ArrayList<>();
 
@@ -100,6 +104,8 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval=true)
     private List<Reply> replies = new ArrayList<>();
+
+
 
 
 

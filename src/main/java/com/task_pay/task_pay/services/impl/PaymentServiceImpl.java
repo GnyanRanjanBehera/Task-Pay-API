@@ -6,6 +6,7 @@ import com.razorpay.Utils;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.PaymentDto;
 import com.task_pay.task_pay.models.dtos.UserDto;
+import com.task_pay.task_pay.models.dtos.WalletDto;
 import com.task_pay.task_pay.models.entities.*;
 import com.task_pay.task_pay.models.enums.*;
 import com.task_pay.task_pay.payloads.CheckOutOption;
@@ -52,6 +53,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private MileStonePaymentRepository mileStonePaymentRepository;
+
+    @Autowired
+    private WalletRepository walletRepository;
 
 
 
@@ -124,7 +128,6 @@ public class PaymentServiceImpl implements PaymentService {
         options.put("razorpay_payment_id",paymentId);
         options.put("razorpay_signature", signature);
         boolean status =  Utils.verifyPaymentSignature(options, secret);
-
         Payment  payment = paymentRepository.findByOrderId(orderId).orElseThrow(()->new ResourceNotFoundException("order id not found"));
         com.razorpay.Payment razorPay = razorpayClient.payments.fetch(paymentId);
         if(status){
@@ -133,9 +136,28 @@ public class PaymentServiceImpl implements PaymentService {
             task.setBlockedAt(new Date());
             payment.setSuccessAt(new Date());
             payment.setStatus(PaymentStatus.SUCCESS);
+            if(payment.getTask().getMileStones()!=null){
+                User user = userRepository.findById(payment.getSenderUser().getUserId())
+                        .orElseThrow(() -> new RuntimeException("User not found with id: "));
+                double totalPrice =
+                        payment.getTask().getMileStones().stream()
+                        .mapToDouble(MileStone::getMileStonePrice)
+                        .sum();
+                double taxAmount=payment.getTask().getTaskPrice();
+                double walletAmount=taxAmount-totalPrice;
+                Wallet wallet = Wallet.builder()
+                        .user(payment.getSenderUser())
+                        .wAmount(walletAmount)
+                        .updatedAt(new Date())
+                        .user(user).build();
+                walletRepository.save(wallet);
+
+
+            }
         }else{
             payment.setProcessingAt(new Date());
             payment.setStatus(PaymentStatus.PROCESSING);
+
         }
         payment.setPaymentId(paymentId);
         payment.setMethod(razorPay.get("method"));
