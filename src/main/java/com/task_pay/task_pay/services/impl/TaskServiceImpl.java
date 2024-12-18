@@ -200,6 +200,15 @@ public class TaskServiceImpl implements TaskService {
             if(StringUtils.hasText(updateMilestoneReq.getMilestoneName())){
                 mileStone.setMileStoneName(updateMilestoneReq.getMilestoneName());
             }
+            if(updateMilestoneReq.getStartDate() !=null){
+                mileStone.setStartDate(updateMilestoneReq.getStartDate());
+
+            }
+            if(updateMilestoneReq.getEndDate() !=null){
+                mileStone.setEndDate(updateMilestoneReq.getEndDate());
+            }
+
+
             double deductAmount=taskAmount-totalPrice;
             if(updateMilestoneReq.getMilestonePrice()<=deductAmount){
                 mileStone.setMileStonePrice(updateMilestoneReq.getMilestonePrice());
