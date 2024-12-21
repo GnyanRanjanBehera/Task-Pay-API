@@ -1,5 +1,7 @@
 package com.task_pay.task_pay.models.entities;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -14,6 +16,7 @@ import java.util.Date;
 public class ChatMessage {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private Integer chatId;
     private Integer senderId;

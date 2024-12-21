@@ -12,10 +12,8 @@ import java.util.List;
 
 @Service
 public class ChatMessageServiceImpl implements ChatMessageService {
-
-
     @Autowired
-    private ChatMessageRepository repository;
+    private ChatMessageRepository chatMessageRepository;
 
     @Autowired
     private ChatRoomService chatRoomService;
@@ -25,7 +23,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .getChatRoomId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true)
                 .orElseThrow(() -> new ResourceNotFoundException("chat room id not found !"));
         chatMessage.setChatId(chatId);
-        repository.save(chatMessage);
+        chatMessageRepository.save(chatMessage);
         return chatMessage;
     }
 
@@ -33,6 +31,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Override
     public List<ChatMessage> findChatMessages(Integer senderId, Integer recipientId) {
         var chatId = chatRoomService.getChatRoomId(senderId, recipientId, false);
-        return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
+        return chatId.map(chatMessageRepository::findByChatId).orElse(new ArrayList<>());
     }
 }

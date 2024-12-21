@@ -15,6 +15,7 @@ import lombok.*;
 public class ChatRoom {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private Integer chatId;
     private Integer senderId;
