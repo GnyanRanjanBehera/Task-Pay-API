@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.services;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
+import com.task_pay.task_pay.models.entities.MileStone;
 import com.task_pay.task_pay.payloads.PageableResponse;
 import com.task_pay.task_pay.payloads.UpdateMilestoneReq;
 import com.task_pay.task_pay.payloads.UpdateTaskReq;
@@ -33,6 +34,9 @@ public interface TaskService {
 
     PageableResponse<TaskDto> fetchBuyerTasks(Integer userId,int pageNumber,int pageSize,String sortBy, String sortDir);
     PageableResponse<TaskDto> fetchSellerTasks(Integer userId,int pageNumber,int pageSize,String sortBy, String sortDir);
+    TaskDto fetchTaskDetails(Integer userId,int taskId);
+
+    List<MileStoneDto> fetchMilestoneByTaskId(Integer userId, Integer taskId);
 
     TaskDto acceptTask(Integer userId,Integer taskId);
 

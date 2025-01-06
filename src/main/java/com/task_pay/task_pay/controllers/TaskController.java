@@ -1,6 +1,7 @@
 package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.*;
+import com.task_pay.task_pay.models.entities.MileStone;
 import com.task_pay.task_pay.models.entities.Task;
 import com.task_pay.task_pay.payloads.*;
 import com.task_pay.task_pay.services.FCMService;
@@ -146,6 +147,24 @@ public class TaskController {
     }
 
 
+    @GetMapping("/fetchTaskDetails")
+    public ResponseEntity<TaskDto> fetchTaskDetails(
+            @RequestParam(value = "taskId") int taskId,
+            @RequestParam(value = "userId") int userId){
+        TaskDto taskDto = taskService.fetchTaskDetails(userId, taskId);
+        return new ResponseEntity<TaskDto>(taskDto,HttpStatus.OK);
+
+    }
+
+    @GetMapping("/fetchMilestoneByTaskId")
+    public ResponseEntity<List<MileStoneDto>> fetchMilestoneByTaskId(
+            @RequestParam(value = "taskId") int taskId,
+            @RequestParam(value = "userId") int userId){
+        List<MileStoneDto> mileStones = taskService.fetchMilestoneByTaskId(userId, taskId);
+        return new ResponseEntity<>(mileStones,HttpStatus.OK);
+    }
+
+
     @GetMapping("/fetchSellerTasks/{userId}")
     public ResponseEntity<PageableResponse<TaskDto>> fetchSellerTasks(
             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
@@ -244,4 +263,6 @@ public class TaskController {
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());
     }
+
+
 }

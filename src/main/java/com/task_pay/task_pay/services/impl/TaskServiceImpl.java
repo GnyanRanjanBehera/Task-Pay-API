@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.MileStoneDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
-import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.MileStone;
 import com.task_pay.task_pay.models.entities.Task;
 import com.task_pay.task_pay.models.entities.TaskFile;
@@ -41,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -169,7 +169,7 @@ public class TaskServiceImpl implements TaskService {
                 throw new ResourceNotFoundException("Your enter task amount can not be less previous amount");
             }
         }else{
-            throw new ResourceNotFoundException("You can not update task if task is Accepted by user");
+            throw new ResourceNotFoundException("You can not update task if task is Accepted by seller");
         }
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask,TaskDto.class);
@@ -297,6 +297,22 @@ public class TaskServiceImpl implements TaskService {
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
         Page<Objects[]> sellerTasks = taskRepository.findSellerTasks(userId, pageable);
         return Helper.getPageableResponse(sellerTasks, TaskDto.class);
+    }
+
+    @Override
+    public TaskDto fetchTaskDetails(Integer userId, int taskId) {
+        userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User not found by this user id"));
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new ResourceNotFoundException("Task not found by this id"));
+        return mapper.map(task,TaskDto.class);
+    }
+
+    @Override
+    public List<MileStoneDto> fetchMilestoneByTaskId(Integer userId, Integer taskId) {
+        userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User not found by this user id"));
+        List<MileStone> byTaskTaskId = mileStoneRepository.findByTaskTaskId(taskId);
+        return byTaskTaskId.stream()
+                .map(milestone -> mapper.map(milestone, MileStoneDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override

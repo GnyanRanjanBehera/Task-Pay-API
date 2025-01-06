@@ -3,6 +3,7 @@ package com.task_pay.task_pay.controllers;
 import com.task_pay.task_pay.models.entities.ChatMessage;
 import com.task_pay.task_pay.models.entities.ChatNotification;
 import com.task_pay.task_pay.services.ChatMessageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 
-@RestController
-@RequestMapping("/api/chat")
+@Controller
 public class ChatController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
