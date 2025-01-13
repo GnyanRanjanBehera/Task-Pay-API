@@ -114,11 +114,11 @@ public class TaskController {
         return new ResponseEntity<>(mileStoneDto,HttpStatus.OK);
     }
 
-    @PostMapping("/addNewMilestone/{taskId}")
+    @PostMapping("/addNewMilestone")
     public ResponseEntity<TaskDto> addNewMilestone(
             @Valid @RequestBody MileStoneDto mileStoneDto,
-           @Valid @PathVariable(required = true) Integer userId){
-        TaskDto taskDto = taskService.addNewMilestone(mileStoneDto, userId);
+           @RequestParam(required = true) Integer taskId){
+        TaskDto taskDto = taskService.addNewMilestone(mileStoneDto, taskId);
         return new ResponseEntity<>(taskDto,HttpStatus.OK);
     }
 
