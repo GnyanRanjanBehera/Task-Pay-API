@@ -232,13 +232,12 @@ public class TaskServiceImpl implements TaskService {
                 .sum();
         double restAmount=task.getTaskPrice()-totalPrice;
         if(restAmount>=mileStoneDto.getMileStonePrice()){
-            List<MileStone> mileStoneList = new ArrayList<>();
-            mileStoneList.add(mapper.map(mileStoneDto,MileStone.class));
-            task.setMileStones(mileStoneList);
+            MileStone mileStone = getMileStone(mileStoneDto, task);
+            task.getMileStones().add(mileStone);
         }else{
           throw  new ResourceNotFoundException("Your milestone price greater than the rest amount");
         }
-        
+
         Task saveTask = taskRepository.save(task);
         return mapper.map(saveTask, TaskDto.class);
     }
