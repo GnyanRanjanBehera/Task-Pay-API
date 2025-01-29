@@ -4,6 +4,7 @@ import com.task_pay.task_pay.exceptions.ResourceNotFoundException;
 import com.task_pay.task_pay.models.dtos.UserDto;
 import com.task_pay.task_pay.models.entities.Token;
 import com.task_pay.task_pay.models.entities.User;
+import com.task_pay.task_pay.models.enums.Role;
 import com.task_pay.task_pay.models.enums.TokenType;
 import com.task_pay.task_pay.models.enums.UserType;
 import com.task_pay.task_pay.repositories.TokenRepository;
@@ -105,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
 
         User user=User.builder()
                 .userType(UserType.BUYER)
-                .role(userDto.getRole())
+                .role(Role.USER)
                 .name(userDto.getName())
                 .profilePic(userDto.getProfilePic())
                 .email(userDto.getEmail())

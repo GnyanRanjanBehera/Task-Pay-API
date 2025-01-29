@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = true,unique = true)
     private String mobileNumber;
 
     @Column(nullable = false,unique = true)
