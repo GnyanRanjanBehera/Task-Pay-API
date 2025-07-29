@@ -99,6 +99,8 @@ public class PaymentServiceImpl implements PaymentService {
         checkOutOption.setCreatedAt(order.get("created_at"));
         checkOutOption.setPrefill(prefill);
         Optional<Payment> existPayment = paymentRepository.findByTask_TaskId(taskId);
+
+
         Payment payment;
         if(existPayment.isPresent()){
              payment = existPayment.get();

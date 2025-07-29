@@ -289,7 +289,7 @@ public class TaskServiceImpl implements TaskService {
     public PageableResponse<TaskDto> fetchBuyerTasks(Integer userId,int pageNumber, int pageSize, String sortBy, String sortDir) {
         Sort sort = (sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
-        Page<Objects[]> buyerTasks = taskRepository.findBuyerTasks(userId, pageable);
+        Page<Task> buyerTasks = taskRepository.findBuyerTasks(userId, pageable);
         return Helper.getPageableResponse(buyerTasks, TaskDto.class);
     }
 
@@ -297,7 +297,7 @@ public class TaskServiceImpl implements TaskService {
     public PageableResponse<TaskDto> fetchSellerTasks(Integer userId,int pageNumber, int pageSize, String sortBy, String sortDir) {
         Sort sort = (sortDir.equalsIgnoreCase("desc"))?(Sort.by(sortBy).descending()):(Sort.by(sortBy).ascending());
         Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
-        Page<Objects[]> sellerTasks = taskRepository.findSellerTasks(userId, pageable);
+        Page<Task> sellerTasks = taskRepository.findSellerTasks(userId, pageable);
         return Helper.getPageableResponse(sellerTasks, TaskDto.class);
     }
 
