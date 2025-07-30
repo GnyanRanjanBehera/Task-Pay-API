@@ -1,4 +1,5 @@
 package com.task_pay.task_pay.controllers;
+import com.task_pay.task_pay.models.dtos.MileStonePaymentDto;
 import com.task_pay.task_pay.models.dtos.PaymentDto;
 import com.task_pay.task_pay.models.dtos.TaskDto;
 import com.task_pay.task_pay.payloads.PageableResponse;
@@ -65,5 +66,25 @@ public class TransactionController {
     ){
         PageableResponse<TaskDto> task = transactionService.findSellerPaymentReleasedTask(userId, pageNumber, pageSize, sortBy, sortDir);
         return  new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
+    @GetMapping("/fetchTaskPaymentDetails/{taskId}")
+    ResponseEntity<PaymentDto> fetchTaskPaymentDetails(
+          @PathVariable(value = "taskId") Integer taskId
+    ){
+        PaymentDto paymentDto = transactionService.fetchTaskPaymentDetails(taskId);
+        return new ResponseEntity<>(paymentDto,HttpStatus.OK);
+
+
+    }
+
+    @GetMapping("/fetchMilestonePaymentDetails/{milestoneId}")
+    ResponseEntity<MileStonePaymentDto> fetchMilestonePaymentDetails(
+            @PathVariable(value = "milestoneId") Integer milestoneId
+    ){
+        MileStonePaymentDto mileStonePaymentDto = transactionService.fetchMilestonePaymentDetails(milestoneId);
+        return new ResponseEntity<>(mileStonePaymentDto,HttpStatus.OK);
+
+
     }
 }

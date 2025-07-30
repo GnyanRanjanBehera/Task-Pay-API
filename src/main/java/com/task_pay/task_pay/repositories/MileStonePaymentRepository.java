@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface MileStonePaymentRepository extends JpaRepository<MileStonePayment,Integer> {
     Optional<MileStonePayment> findByMileStone_MileStoneId(int mileStoneId);
     Optional<MileStonePayment> findByOrderId(String orderId);
+
+//    Optional<MileStonePayment> findByMileStone_MileStoneId(Integer milestoneId);
 }
