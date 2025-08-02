@@ -1,6 +1,8 @@
-FROM openjdk:18-alpine
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-RUN mkdir -p src/main/resources
-COPY src/main/resources/google-services.json src/main/resources/google-services.json
-ENTRYPOINT ["java","-jar","/app.jar"]
+FROM openjdk:17
+WORKDIR /app
+COPY ./target/task_pay.jar /app
+RUN mkdir -p /app/firebase
+COPY ./src/main/resources/firebase/google-services.json /app/firebase/google-services.json
+EXPOSE 2024
+ENTRYPOINT ["java", "-jar", "task_pay.jar"]
+

@@ -130,7 +130,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>task-pay</finalName>
+		<finalName>task_pay</finalName>
 	</build>
 
 </project>
