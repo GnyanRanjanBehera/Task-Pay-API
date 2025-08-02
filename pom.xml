@@ -12,6 +12,7 @@
 	<artifactId>task_pay</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>task_pay</name>
+	<packaging>war</packaging>
 	<description>This project used for payment</description>
 	<properties>
 		<java.version>18</java.version>
