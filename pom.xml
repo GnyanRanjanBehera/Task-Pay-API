@@ -115,8 +115,6 @@
 		</dependency>
 
 	</dependencies>
-
-
 	<build>
 		<plugins>
 			<plugin>
@@ -132,6 +130,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>task-pay</finalName>
 	</build>
 
 </project>
