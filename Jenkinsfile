@@ -27,7 +27,7 @@ pipeline {
         stage("Build Image"){
                     steps{
                         script{
-                            sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                            bat 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
                         }
                     }
                 }
@@ -35,7 +35,7 @@ pipeline {
                     steps{
                         withCredentials([string(credentialsId: 'docker-hub', variable: 'docker-hub')]) {
                          bat 'docker login -u gnyandocker -p ${docker-hub}'
-                         sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
+                         bat 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
                         }
                     }
                 }
