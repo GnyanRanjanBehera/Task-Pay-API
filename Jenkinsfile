@@ -4,7 +4,7 @@ pipeline {
         maven "maven"
     }
     environment{
-               APP_NAME = "task-pay-docker"
+               APP_NAME = "task-pay-ci-cd-docker"
                RELEASE_NO= "1.0.0"
                DOCKER_USER= "gnyandocker"
                IMAGE_NAME= "${DOCKER_USER}"+"/"+"${APP_NAME}"
