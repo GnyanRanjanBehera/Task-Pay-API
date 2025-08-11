@@ -4,7 +4,7 @@ pipeline {
         maven "maven"
     }
     environment{
-               APP_NAME = "task-pay-ci-cd-docker"
+               APP_NAME = "task-pay-ci-cd"
                RELEASE_NO= "1.0.0"
                DOCKER_USER= "gnyandocker"
                IMAGE_NAME= "${DOCKER_USER}"+"/"+"${APP_NAME}"
@@ -27,7 +27,7 @@ pipeline {
         stage("Build Image"){
                     steps{
                         script{
-                            bat 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                            bat 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG}'
                         }
                     }
                 }
