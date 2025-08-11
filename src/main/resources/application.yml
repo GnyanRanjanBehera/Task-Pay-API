@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: task_pay
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/task_pay
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: <TaskPay>
+    password: <wuhy ylhw oqho tsgf>
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 2024
+
+user:
+  image:
+    path: assets/users/
+
+task:
+  image:
+    path: assets/tasks/
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+
+razorpay:
+  key:
+    id: rzp_test_dmxgd2YukrDMLU
+    secret: o7FBlWRk4Sh7I8PENFfQVNdq
+
+app:
+  firebase-configuration-file: classpath:firebase/google-services.json
+
+googleClientId: 690061659225-q95tmb60ckgm2cnfptop0s6b53e6pb09.apps.googleusercontent.com
+googleSecret: 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
+
+newPassword: awhsfiohbrwqchfwgfivwqguiprfwifyco
