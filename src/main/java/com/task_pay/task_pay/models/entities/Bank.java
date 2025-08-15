@@ -30,7 +30,7 @@ public class Bank {
     @Column(nullable = false)
     private String mobileNUmber;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 }

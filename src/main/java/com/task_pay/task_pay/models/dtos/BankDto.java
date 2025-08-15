@@ -14,6 +14,8 @@ public class BankDto {
     @NotBlank(message = "Bank name is blank")
     private  String bankName;
 
+
+
     @NotBlank(message = "Bank account number is blank")
     private String accNumber;
 
@@ -26,5 +28,6 @@ public class BankDto {
     @NotBlank(message = "Mobile number is blank")
     private String mobileNUmber;
 
+    private UserDto user;
 
 }

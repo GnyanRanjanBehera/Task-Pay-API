@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Validated
 @RequestMapping("/api/bank")
@@ -25,9 +27,9 @@ public class BankController {
         return new ResponseEntity<>(bankDto1, HttpStatus.OK);
     }
     @GetMapping("/fetchBank")
-    public  ResponseEntity<BankDto> fetchBank(@RequestParam(value = "userId") Integer userId){
-        BankDto bankDto = bankService.fetchBank(userId);
-        return new ResponseEntity<>(bankDto,HttpStatus.OK);
+    public  ResponseEntity<List<BankDto>> fetchBank(@RequestParam(value = "userId") Integer userId){
+        List<BankDto> bankDtos = bankService.fetchBank(userId);
+        return new ResponseEntity<>(bankDtos,HttpStatus.OK);
     }
 
     @PutMapping("/updateBank")
