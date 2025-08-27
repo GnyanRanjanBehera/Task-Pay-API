@@ -1,64 +1,64 @@
-version: "3.8"
-services:
-  #  MYSQL setup
-  mysql:
-    image: mysql:8
-    container_name: task_pay_mysql_db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: task_pay
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    restart: unless-stopped
-    networks:
-      - task-pay-network
-
-
-  #  PHP My Admin setup
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: task_pay_phpmyadmin
-
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: root
-
-    ports:
-      - "3308:80"
-    depends_on:
-      - mysql
-    restart: unless-stopped
-    networks:
-      - task-pay-network
-
-
-  task_pay:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: task_pay_container
-    ports:
-      - "2024:2024"
-    depends_on:
-      - mysql
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/task_pay
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-    volumes:
-      - ./src/main/resources/firebase/google-services.json:/app/firebase/google-services.json
-    restart: unless-stopped
-    networks:
-      - task-pay-network
-
-
-volumes:
-  mysql_data:
-
-networks:
-  task-pay-network:
-    driver: bridge
+#version: "3.8"
+#services:
+#  #  MYSQL setup
+#  mysql:
+#    image: mysql:8
+#    container_name: task_pay_mysql_db
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root
+#      MYSQL_DATABASE: task_pay
+#    ports:
+#      - "3307:3306"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+#    restart: unless-stopped
+#    networks:
+#      - task-pay-network
+#
+#
+#  #  PHP My Admin setup
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    container_name: task_pay_phpmyadmin
+#
+#    environment:
+#      PMA_HOST: mysql
+#      PMA_PORT: 3306
+#      PMA_USER: root
+#      PMA_PASSWORD: root
+#
+#    ports:
+#      - "3308:80"
+#    depends_on:
+#      - mysql
+#    restart: unless-stopped
+#    networks:
+#      - task-pay-network
+#
+#
+#  task_pay:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: task_pay_container
+#    ports:
+#      - "2024:2024"
+#    depends_on:
+#      - mysql
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/task_pay
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=root
+#    volumes:
+#      - ./src/main/resources/firebase/google-services.json:/app/firebase/google-services.json
+#    restart: unless-stopped
+#    networks:
+#      - task-pay-network
+#
+#
+#volumes:
+#  mysql_data:
+#
+#networks:
+#  task-pay-network:
+#    driver: bridge

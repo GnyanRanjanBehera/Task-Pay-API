@@ -131,7 +131,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>task_pay</finalName>
+		<finalName>task-pay-api</finalName>
 	</build>
 
 </project>
