@@ -17,7 +17,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
 
-    @GetMapping("/findBuyerPayment")
+    @GetMapping("/findBuyerPayment/{userId}")
     ResponseEntity<PageableResponse<PaymentDto>> findBuyerPayment(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
            @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
            @RequestParam(value = "sortBy",defaultValue = "taskStatus",required = false) String sortBy,
@@ -30,7 +30,7 @@ public class TransactionController {
 
 
 
-    @GetMapping("/findSellerPayment")
+    @GetMapping("/findSellerPayment/{userId}")
     ResponseEntity<PageableResponse<PaymentDto>> findSellerPayment(@RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
           @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
           @RequestParam(value = "sortBy",defaultValue = "taskStatus",required = false) String sortBy,
